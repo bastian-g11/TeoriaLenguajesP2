@@ -44,11 +44,11 @@ public class UIController : MonoBehaviour
         lineaTexto.ToString();
         Debug.Log(lineaTexto);
         //AutomataController.instance.index = 0;
-        //errorText.text = " ";
-        //distanceY = 0;
-        //Destroy(temporalContainer);
-        //temporalContainer = Instantiate(temporalContainerPrefab);
-        //isFile = true;
+        errorText.text = " ";
+        distanceY = 0;
+        Destroy(temporalContainer);
+        temporalContainer = Instantiate(temporalContainerPrefab);
+        isFile = true;
         TextReader.instance.Recorrer(lineaTexto);
     }
 

@@ -39,7 +39,10 @@ public class TextReader : MonoBehaviour
     public void Recorrer(string _lineToRead)
     {
         string s = _lineToRead;
-        parse(s);
+        UIController.instance.CreateContainer();
+        CreateLinkedList();
+        Parse(s);
+        
     }
 
     // Returns 'true' if the character is a DELIMITER. 
@@ -48,9 +51,9 @@ public class TextReader : MonoBehaviour
         if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
-            ch == '[' || ch == ']' || ch == '{' || ch == '}')
+            ch == '[' || ch == ']' || ch == '{' || ch == '}' || 
+            ch == '%' || ch == '^')
         {
-            //Debug.Log("Es un separador");
             return (true);
         }
         return (false);
@@ -61,13 +64,13 @@ public class TextReader : MonoBehaviour
     {
         if (ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == '>' || ch == '<' ||
-            ch == '=')
+            ch == '=' || ch == '%' || ch == '^')
             return (true);
         return (false);
     }
 
     // Returns 'true' if the string is a VALID IDENTIFIER. 
-    bool validIdentifier(string str)
+    bool ValidIdentifier(string str)
     {
         if (str[0] == '0' || str[0] == '1' || str[0] == '2' ||
             str[0] == '3' || str[0] == '4' || str[0] == '5' ||
@@ -129,11 +132,9 @@ public class TextReader : MonoBehaviour
     }
 
     // Extracts the SUBSTRING. 
-    string subString(string str, int left, int right)
+    string SubString(string str, int left, int right)
     {
         int i;
-        //string subStr = (char*)malloc(
-        //            sizeof(char) * (right - left + 2));
         string subStr = "";
         for (i = left; i <= right; i++)
             subStr = subStr + str[i];
@@ -141,7 +142,7 @@ public class TextReader : MonoBehaviour
     }
 
     // Parsing the input STRING. 
-    void parse(string str)
+    void Parse(string str)
     {
         int left = 0, right = 0;
         int len = str.Length;
@@ -162,7 +163,13 @@ public class TextReader : MonoBehaviour
                 if (isDelimiter(str[right]) == true && left == right)
                 {
                     if (isOperator(str[right]) == true)
+                    {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
+                    }
+                    else if(str[right] != (' '))
+                    {
+                        Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
+                    }
 
                     right++;
                     left = right;
@@ -170,10 +177,13 @@ public class TextReader : MonoBehaviour
                 else if ((right == len && left != right)
                          || isDelimiter(str[right]) == true && left != right)
                 {
-                    string subStr = subString(str, left, right - 1);
+                    string subStr = SubString(str, left, right - 1);
 
                     if (isKeyword(subStr) == true)
+                    {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
+                        CreateNode("KeyWord", subStr);
+                    }
 
                     else if (isInteger(subStr) == true)
                         Debug.Log("'%s' IS AN INTEGER\n" + subStr);
@@ -181,11 +191,14 @@ public class TextReader : MonoBehaviour
                     else if (isRealNumber(subStr) == true)
                         Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
 
-                    else if (validIdentifier(subStr) == true
+                    else if (ValidIdentifier(subStr) == true
                             && isDelimiter(str[right - 1]) == false)
+                    {
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
+                        CreateNode("Variable", subStr);
+                    }
 
-                    else if (validIdentifier(subStr) == false
+                    else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                     left = right;
@@ -196,15 +209,20 @@ public class TextReader : MonoBehaviour
                 if (isDelimiter(str[right - 1]) == true && left == right)
                 {
                     if (isOperator(str[right]) == true)
+                    {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
-
+                    }
+                    else if (str[right] != (' '))
+                    {
+                        Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
+                    }
                     right++;
                     left = right;
                 }
                 else if ((right == len && left != right)
                          || isDelimiter(str[right - 1]) == true && left != right)
                 {
-                    string subStr = subString(str, left, right - 1);
+                    string subStr = SubString(str, left, right - 1);
 
                     if (isKeyword(subStr) == true)
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
@@ -215,11 +233,11 @@ public class TextReader : MonoBehaviour
                     else if (isRealNumber(subStr) == true)
                         Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
 
-                    else if (validIdentifier(subStr) == true
+                    else if (ValidIdentifier(subStr) == true
                             && isDelimiter(str[right - 1]) == false)
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
 
-                    else if (validIdentifier(subStr) == false
+                    else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                     left = right;
@@ -227,5 +245,17 @@ public class TextReader : MonoBehaviour
             }
         }
         return;
+    }
+
+    public void CreateLinkedList()
+    {
+        SinglyLinkedListController.instance.CreateSinglyLinkedList();
+    }
+    
+    public void CreateNode(string type, string line)
+    {
+        if (char.IsWhiteSpace(line[0])) return;
+        SinglyLinkedListController.instance.AddNode(type, line);
+        UIController.instance.CreateUINode();
     }
 }
