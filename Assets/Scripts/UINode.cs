@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public class UINode : MonoBehaviour
 {
+    public Node node;
+    public Node nextNode;
     public Text txtClassType;
     public Text txtValue;
     public LineRenderer lineRenderer;
-    public Node node;
-    public Node nextNode;
+    
 
     void Update()
     {

@@ -57,7 +57,7 @@ public class UIController : MonoBehaviour
         if (ErrorController.instance.GetLineHasError())
         {
             errorText.text = errorText.text + "Errores en la línea: " + lineNumber + " \n" +
-                        ErrorController.instance.GetLineErrors(); ;
+                        ErrorController.instance.GetLineErrors();
             ErrorController.instance.RestartErrors();
         }
     }
@@ -67,7 +67,8 @@ public class UIController : MonoBehaviour
         if(isFile)
         {
             Camera.main.transform.position = cameraPosition;
-            temporalContainer.SetActive(true);
+            if(temporalContainer != null)
+                temporalContainer.SetActive(true);
             errorsCanvas.SetActive(false);
             listsCanvas.SetActive(true);
             cameraMovement.enabled = true;
@@ -76,7 +77,8 @@ public class UIController : MonoBehaviour
 
     public void ShowLineErrors()
     {
-        temporalContainer.SetActive(false);
+        if (temporalContainer != null)
+            temporalContainer.SetActive(false);
         errorsCanvas.SetActive(true);
         listsCanvas.SetActive(false);
         cameraMovement.enabled = false;

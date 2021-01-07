@@ -21,22 +21,33 @@ public class TextReader : MonoBehaviour
     }
     #endregion
 
+    public int lineNumber = 0;
+
     public void Recorrer(string _lineToRead)
     {
         string line = _lineToRead;
         string aLine = null;
         System.IO.StringReader strReader = new StringReader(line);
+        CreateLinkedList();
+        lineNumber = 0;
+        ErrorController.instance.SetLineHasError(false);
 
         while (true)
         {
-            //Reinicio todo
+            lineNumber += 1;
             aLine = strReader.ReadLine();
             if (aLine == null) break;
             UIController.instance.CreateContainer();
-            CreateLinkedList();
             Parse(aLine);
         }
-        
+
+        bool lineHasError = ErrorController.instance.GetLineHasError();
+        if (lineHasError)
+        {
+            Destroy(UIController.instance.temporalContainer);
+            UIController.instance.distanceY = UIController.instance.distanceY - 5;
+            ResetLinkedList();
+        }
     }
 
     // Returns 'true' if the character is a DELIMITER. 
@@ -45,7 +56,7 @@ public class TextReader : MonoBehaviour
         if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
-            ch == '[' || ch == ']' || ch == '{' || ch == '}' || 
+            ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
             ch == '%' || ch == '^')
         {
             return (true);
@@ -84,7 +95,9 @@ public class TextReader : MonoBehaviour
     // Returns 'true' if the string is a KEYWORD. 
     bool isKeyword(string str)
     {
-        if (str.Equals("if") || str.Equals("else") || str.Equals("while"))
+        if (str.Equals("if") || str.Equals("else") || str.Equals("while") ||
+            str.Equals("bool") || str.Equals("String") || str.Equals("int") ||
+            str.Equals("float"))
         {
             Debug.Log("Es palabra clave");
             return (true);
@@ -148,6 +161,10 @@ public class TextReader : MonoBehaviour
         int left = 0, right = 0;
         int len = str.Length;
         bool isEnd = false;
+        string errors = null;
+        string tag = null;
+        string subStr = null;
+        bool lineHasError = ErrorController.instance.GetLineHasError();
         Debug.Log("Valor Tamaño: " + len);
         while (right < len && left <= right)
         {
@@ -157,84 +174,102 @@ public class TextReader : MonoBehaviour
                 if (right == len) isEnd = true;
             }
 
-            //Debug.Log("Valor Left: " + left);
-            //Debug.Log("Valor Right: " + right);
             if (!isEnd)
             {
                 if (isDelimiter(str[right]) == true && left == right)
                 {
+                    subStr = str[right].ToString();
                     if (isOperator(str[right]) == true)
                     {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
-                        CreateNode("Operador", str[right].ToString());
+                        tag = "Operador";
+                        if (!lineHasError)
+                        {
+                            CreateNode(tag, subStr);
+                        }
                     }
-                    else if(str[right] != (' '))
+                    else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        CreateNode("Separador", str[right].ToString());
+                        tag = "Separador";
+                        if (!lineHasError)
+                        {
+                            CreateNode(tag, subStr);
+                        }
                     }
-
                     right++;
                     left = right;
                 }
                 else if ((right == len && left != right)
                          || isDelimiter(str[right]) == true && left != right)
                 {
-                    string subStr = SubString(str, left, right - 1);
-
+                    subStr = SubString(str, left, right - 1);
                     if (isKeyword(subStr) == true)
                     {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
-                        CreateNode("KeyWord", subStr);
+                        tag = "KeyWord";
                     }
 
                     else if (isInteger(subStr) == true)
                     {
                         Debug.Log("'%s' IS AN INTEGER\n" + subStr);
-                        CreateNode("Número", subStr);
+                        tag = "Número";
                     }
 
                     else if (isRealNumber(subStr) == true)
                     {
                         Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
-                        CreateNode("Número", subStr);
+                        tag = "Número";
                     }
 
                     else if (isBoolean(subStr) == true)
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
-                        CreateNode("Boolean", subStr);
+                        tag = "Boolean";
                     }
 
                     else if (ValidIdentifier(subStr) == true
                             && isDelimiter(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
-                        CreateNode("Variable", subStr);
+                        tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                     {
-                        //Si falla algo, borrar la lista ligada
+                        errors = errors + "Nombre de variable incorrecto\n";
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                     }
                     left = right;
+                    if (!lineHasError)
+                    {
+                        CreateNode(tag, subStr);
+                    }
                 }
             }
             else
             {
                 if (isDelimiter(str[right - 1]) == true && left == right)
                 {
+                    subStr = str[right].ToString();
                     if (isOperator(str[right]) == true)
                     {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
-                        CreateNode("Operador", str[right].ToString());
+                        tag = "Operador";
+                        if (!lineHasError)
+                        {
+                            CreateNode(tag, subStr);
+                        }
                     }
                     else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        CreateNode("Separador", str[right].ToString());
+                        tag = "Separador";
+                        if (!lineHasError)
+                        {
+                            CreateNode(tag, subStr);
+                        }
                     }
                     right++;
                     left = right;
@@ -242,49 +277,61 @@ public class TextReader : MonoBehaviour
                 else if ((right == len && left != right)
                          || isDelimiter(str[right - 1]) == true && left != right)
                 {
-                    string subStr = SubString(str, left, right - 1);
 
+                    subStr = SubString(str, left, right - 1);
                     if (isKeyword(subStr) == true)
                     {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
-                        CreateNode("KeyWord", subStr);
+                        tag = "KeyWord";
+
                     }
 
                     else if (isInteger(subStr) == true)
                     {
                         Debug.Log("'%s' IS AN INTEGER\n" + subStr);
-                        CreateNode("Número", subStr);
+                        tag = "Número";
                     }
 
                     else if (isRealNumber(subStr) == true)
                     {
                         Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
-                        CreateNode("Número", subStr);
+                        tag = "Número";
                     }
 
                     else if (isBoolean(subStr) == true)
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
-                        CreateNode("Boolean", subStr);
+                        tag = "Boolean";
                     }
 
                     else if (ValidIdentifier(subStr) == true
                             && isDelimiter(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
-                        CreateNode("Variable", subStr);
+                        tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                     {
-                        //Si falla algo, borrar la lista ligada
+                        errors = errors + "Nombre de variable incorrecto\n";
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                     }
 
                     left = right;
+                    if (!lineHasError)
+                    {
+                        CreateNode(tag, subStr);
+                    }
                 }
             }
+        }
+
+        if (errors != null)
+        {
+            ErrorController.instance.SetErrorMessage(errors);
+            ErrorController.instance.SetLineHasError(true);
+            UIController.instance.SetErrorText(lineNumber);
         }
         return;
     }
@@ -293,8 +340,13 @@ public class TextReader : MonoBehaviour
     {
         SinglyLinkedListController.instance.CreateSinglyLinkedList();
     }
-    
-    public void CreateNode(string type, string line)
+
+    public void ResetLinkedList()
+    {
+        SinglyLinkedListController.instance.ResetSinglyLinkedList();
+    }
+
+public void CreateNode(string type, string line)
     {
         //if (char.IsWhiteSpace(line[0])) return;
         SinglyLinkedListController.instance.AddNode(type, line);

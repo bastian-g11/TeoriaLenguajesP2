@@ -33,7 +33,6 @@ public class ErrorController : MonoBehaviour
 
     public void RestartErrors()
     {
-        lineHasError = false;
         lineErrors = null;
     }
 
