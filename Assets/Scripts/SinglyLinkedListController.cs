@@ -36,4 +36,13 @@ public class SinglyLinkedListController : MonoBehaviour
     {
         singlyLinkedList = null;
     }
+
+    public void TraverseLinkedList()
+    {
+        Node node = singlyLinkedList.GetFirstNode();
+        while (node != null)
+        {
+            node = node.GetNextNode();
+        }
+    }
 }

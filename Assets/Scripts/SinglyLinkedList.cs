@@ -22,15 +22,6 @@ public class SinglyLinkedList
         return lastNode;
     }
 
-    public void TraverseLinkedList()
-    {
-        Node node = firstNode;
-        while(node != null)
-        {
-            node = node.GetNextNode();
-        }
-    }
-
     public void InsertNode(string _dataType, string _value, Node y)
     {
         Node node = new Node(_dataType, _value);

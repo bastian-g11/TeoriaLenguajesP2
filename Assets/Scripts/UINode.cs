@@ -21,7 +21,7 @@ public class UINode : MonoBehaviour
     {
         node = _node;
         if (_node.GetNextNode() != null) nextNode = _node.GetNextNode();
-        if(_node.GetNextNode() != null) nextNode = _node.GetNextNode();
+        //if (_node.GetNextNode() != null) nextNode = _node.GetNextNode();
         txtClassType.text = _node.GetClassType();
         txtValue.text = _node.GetValue();
         lineRenderer.enabled = _node.GetNextNode() != null;
