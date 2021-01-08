@@ -48,10 +48,6 @@ public class TextReader : MonoBehaviour
             Destroy(UIController.instance.temporalContainer);
             UIController.instance.distanceY = UIController.instance.distanceY - 5;
             SinglyLinkedListController.instance.ResetSinglyLinkedList();
-            return;
         }
-
-        SinglyLinkedListController.instance.TraverseLinkedList();
-
     }
 }

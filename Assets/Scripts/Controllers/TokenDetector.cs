@@ -148,6 +148,7 @@ public class TokenDetector : MonoBehaviour
         bool lineHasError = ErrorController.instance.GetLineHasError();
         Node currentNode = null;
         Debug.Log("Valor Tamaño: " + len);
+
         while (right < len && left <= right)
         {
             if (isDelimiter(str[right]) == false)
@@ -168,19 +169,15 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                         tag = "Operador";
-                        if (!lineHasError)
-                        {
-                            currentNode = CreateNode(tag, subStr);
-                        }
+                        currentNode = CreateNode(tag, subStr);
+                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
                     else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
                         tag = "Separador";
-                        if (!lineHasError)
-                        {
-                            currentNode = CreateNode(tag, subStr);
-                        }
+                        currentNode = CreateNode(tag, subStr);
+                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
                     right++;
                     left = right;
@@ -230,14 +227,12 @@ public class TokenDetector : MonoBehaviour
                     else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                     {
-                        errors = errors + "Nombre de variable incorrecto\n";
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
+                        tag = "Variable";
                     }
                     left = right;
-                    if (!lineHasError)
-                    {
-                        currentNode = CreateNode(tag, subStr);
-                    }
+                    currentNode = CreateNode(tag, subStr);
+                    errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                 }
             }
             else
@@ -252,19 +247,15 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                         tag = "Operador";
-                        if (!lineHasError)
-                        {
-                            currentNode = CreateNode(tag, subStr);
-                        }
+                        currentNode = CreateNode(tag, subStr);
+                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
                     else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
                         tag = "Separador";
-                        if (!lineHasError)
-                        {
-                             currentNode =CreateNode(tag, subStr);
-                        }
+                        currentNode = CreateNode(tag, subStr);
+                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
                     right++;
                     left = right;
@@ -315,22 +306,19 @@ public class TokenDetector : MonoBehaviour
                     else if (ValidIdentifier(subStr) == false
                             && isDelimiter(str[right - 1]) == false)
                     {
-                        errors = errors + "Nombre de variable incorrecto\n";
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
+                        tag = "Variable";
+
                     }
 
                     left = right;
-                    if (!lineHasError)
-                    {
-                        currentNode = CreateNode(tag, subStr);
-                    }
+                    currentNode = CreateNode(tag, subStr);
+                    errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                 }
             }
         }
 
-        TokenValidator.instance.TokenValidation(currentNode);
-
-        if (errors != null)
+        if (!string.IsNullOrEmpty(errors))
         {
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
@@ -345,4 +333,5 @@ public class TokenDetector : MonoBehaviour
         UIController.instance.CreateUINode();
         return SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
     }
+
 }
