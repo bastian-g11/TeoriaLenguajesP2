@@ -29,7 +29,7 @@ public class TokenDetector : MonoBehaviour
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
             ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-            ch == '%' || ch == '^')
+            ch == '%' || ch == '^' || ch == '!')
         {
             return (true);
         }
@@ -41,7 +41,7 @@ public class TokenDetector : MonoBehaviour
     {
         if (ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == '>' || ch == '<' ||
-            ch == '=' || ch == '%' || ch == '^')
+            ch == '=' || ch == '%' || ch == '^' || ch == '!')
             return (true);
         return (false);
     }
@@ -90,17 +90,23 @@ public class TokenDetector : MonoBehaviour
     public bool isInteger(string str)
     {
         int i, len = str.Length;
+        bool hasE = false;
 
         if (len == 0)
             return (false);
         for (i = 0; i < len; i++)
-        {
+        {   
+            Debug.Log(str[i] == '-' && i > 0 && str[i - 1] != 'E');
             if (str[i] != '0' && str[i] != '1' && str[i] != '2'
                 && str[i] != '3' && str[i] != '4' && str[i] != '5'
                 && str[i] != '6' && str[i] != '7' && str[i] != '8'
-                && str[i] != '9' || (str[i] == '-' && i > 0))
+                && str[i] != '9' && str[i] != 'E' || (str[i] == '-' && i > 0))
+                return (false);
+
+            if (str[i] == 'E' && hasE)
                 return (false);
         }
+        
         return (true);
     }
 
@@ -145,7 +151,6 @@ public class TokenDetector : MonoBehaviour
         string errors = null;
         string tag = null;
         string subStr = null;
-        bool lineHasError = ErrorController.instance.GetLineHasError();
         Node currentNode = null;
         Debug.Log("Valor Tamaño: " + len);
 
@@ -185,6 +190,8 @@ public class TokenDetector : MonoBehaviour
                 else if ((right == len && left != right)
                          || isDelimiter(str[right]) == true && left != right)
                 {
+                    
+
                     subStr = SubString(str, left, right - 1);
                     if (isKeyword(subStr) == true)
                     {

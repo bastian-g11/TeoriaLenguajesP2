@@ -38,7 +38,7 @@ public class TokenValidator : MonoBehaviour
                 break;
 
             case "Numero":
-                if (!double.TryParse(value, out double number))
+                if (!double.TryParse(value, out double number) && !value.Contains("E"))
                     errors = "- Error en número\n";
 
                 break;
@@ -70,8 +70,8 @@ public class TokenValidator : MonoBehaviour
 
             case "Separador":
                 if (value[0] == ';' || value[0] == '{' || value[0] == '}' ||
-                    value[0] == '(' || value[0] == ')' || value[0] == ';')
-
+                    value[0] == '(' || value[0] == ')' || value[0] == ';' ||
+                    value[0] == ',' || value[0] == '[' || value[0] == ']')
                 {
                     errors = null;
                 }
@@ -81,7 +81,6 @@ public class TokenValidator : MonoBehaviour
                 }
                 break;
         }
-        Debug.Log("esto saleeeee: " + errors);
         return errors;
     }
 }
