@@ -91,19 +91,26 @@ public class TokenDetector : MonoBehaviour
     {
         int i, len = str.Length;
         bool hasE = false;
-
+        Debug.Log("<color=blue> Linea a procesar: </color>" + str);
         if (len == 0)
             return (false);
         for (i = 0; i < len; i++)
-        {   
-            Debug.Log(str[i] == '-' && i > 0 && str[i - 1] != 'E');
+        {
             if (str[i] != '0' && str[i] != '1' && str[i] != '2'
                 && str[i] != '3' && str[i] != '4' && str[i] != '5'
                 && str[i] != '6' && str[i] != '7' && str[i] != '8'
-                && str[i] != '9' && str[i] != 'E' || (str[i] == '-' && i > 0))
+                && str[i] != '9' && char.ToLower(str[i]) != 'e' && str[i] != '-'
+                && str[i] != '+'
+                || (str[i] == '-' && i > 0 && char.ToLower(str[i - 1]) != 'e')
+                || (str[i] == '+' && i > 0 && char.ToLower(str[i - 1]) != 'e'))
+                //|| (str[i] == '-' && i > 0))
                 return (false);
 
-            if (str[i] == 'E' && hasE)
+            if (char.ToLower(str[i]) == 'e' && hasE)
+                return (false);
+
+            if (char.ToLower(str[len - 1]) == 'e' || 
+                str[len - 1] == '+' || str[len - 1] == '-')
                 return (false);
         }
         
@@ -115,6 +122,7 @@ public class TokenDetector : MonoBehaviour
     {
         int i, len = str.Length;
         bool hasDecimal = false;
+        bool hasE = false;
 
         if (len == 0)
             return (false);
@@ -123,11 +131,22 @@ public class TokenDetector : MonoBehaviour
             if (str[i] != '0' && str[i] != '1' && str[i] != '2'
                 && str[i] != '3' && str[i] != '4' && str[i] != '5'
                 && str[i] != '6' && str[i] != '7' && str[i] != '8'
-                && str[i] != '9' && str[i] != '.' ||
-                (str[i] == '-' && i > 0))
+                && str[i] != '9' && str[i] != '.' && str[i] != 'E' 
+                && str[i] != 'e' && str[i] != '-' && str[i] != '+'
+                || (str[i] == '-' && i > 0 && char.ToLower(str[i - 1]) != 'e')
+                || (str[i] == '+' && i > 0 && char.ToLower(str[i - 1]) != 'e'))
+                //|| (str[i] == '-' && i > 0))
                 return (false);
+
             if (str[i] == '.')
                 hasDecimal = true;
+
+            if ((str[i] == 'E' || str[i] == 'e') && hasE)
+                return (false);
+
+            if (char.ToLower(str[len - 1]) == 'e' ||
+                str[len - 1] == '+' || str[len - 1] == '-')
+                return (false);
         }
         return (hasDecimal);
     }
@@ -156,6 +175,7 @@ public class TokenDetector : MonoBehaviour
 
         while (right < len && left <= right)
         {
+            
             if (isDelimiter(str[right]) == false)
             {
                 right++;
@@ -164,6 +184,13 @@ public class TokenDetector : MonoBehaviour
 
             if (!isEnd)
             {
+                if (right > 0 && char.ToLower(str[right - 1]) == 'e'
+                    && (str[right] == '-' || str[right] == '+'))
+                {
+                    Debug.Log("<color=green> Es científico </color>");
+                    right++;
+                }
+
                 if (isDelimiter(str[right]) == true && left == right)
                 {
                     subStr = str[right].ToString();
@@ -191,7 +218,6 @@ public class TokenDetector : MonoBehaviour
                          || isDelimiter(str[right]) == true && left != right)
                 {
                     
-
                     subStr = SubString(str, left, right - 1);
                     if (isKeyword(subStr) == true)
                     {
@@ -242,8 +268,18 @@ public class TokenDetector : MonoBehaviour
                     errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                 }
             }
+
+//************************************************************************
+
             else
             {
+                if (right > 0 && char.ToLower(str[right - 1]) == 'e'
+                    && (str[right] == '-' || str[right] == '+'))
+                {
+                    Debug.Log("<color=green> Es científico </color>");
+                    right++;
+                }
+
                 if (isDelimiter(str[right - 1]) == true && left == right)
                 {
                     subStr = str[right].ToString();
