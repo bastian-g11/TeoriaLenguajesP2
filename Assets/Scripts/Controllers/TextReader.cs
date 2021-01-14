@@ -43,6 +43,9 @@ public class TextReader : MonoBehaviour
         }
 
         bool lineHasError = ErrorController.instance.GetLineHasError();
+
+        StructureValidator.instance.StructureValidation();
+
         if (lineHasError)
         {
             Destroy(UIController.instance.temporalContainer);

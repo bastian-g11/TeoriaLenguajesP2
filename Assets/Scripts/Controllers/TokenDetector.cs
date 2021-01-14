@@ -20,16 +20,29 @@ public class TokenDetector : MonoBehaviour
     }
     #endregion
 
-    public bool flagDT = false;
+    
 
     // Returns 'true' if the character is a DELIMITER. 
-    public bool isDelimiter(char ch)
+    public bool isSeparator(char ch)
     {
         if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
             ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-            ch == '%' || ch == '^' || ch == '!')
+            ch == '%' || ch == '^' || ch == '!' || ch == '\"' ||
+            ch == '\'')
+        {
+            return (true);
+        }
+        return (false);
+    }
+
+    public bool isDelimiter(char ch)
+    {
+        if (ch == '(' || ch == ')' ||
+            ch == '[' || ch == ']' || 
+            ch == '{' || ch == '}' || 
+            ch == '\"' || ch == '\'')
         {
             return (true);
         }
@@ -59,7 +72,7 @@ public class TokenDetector : MonoBehaviour
         if (str[0] == '0' || str[0] == '1' || str[0] == '2' ||
             str[0] == '3' || str[0] == '4' || str[0] == '5' ||
             str[0] == '6' || str[0] == '7' || str[0] == '8' ||
-            str[0] == '9' || isDelimiter(str[0]) == true)
+            str[0] == '9' || isSeparator(str[0]) == true)
             return (false);
         return (true);
     }
@@ -167,6 +180,8 @@ public class TokenDetector : MonoBehaviour
         int left = 0, right = 0;
         int len = str.Length;
         bool isEnd = false;
+        bool flagComilla = false;
+        bool flagDT = false;
         string errors = null;
         string tag = null;
         string subStr = null;
@@ -176,7 +191,7 @@ public class TokenDetector : MonoBehaviour
         while (right < len && left <= right)
         {
             
-            if (isDelimiter(str[right]) == false)
+            if (isSeparator(str[right]) == false)
             {
                 right++;
                 if (right == len) isEnd = true;
@@ -186,12 +201,9 @@ public class TokenDetector : MonoBehaviour
             {
                 if (right > 0 && char.ToLower(str[right - 1]) == 'e'
                     && (str[right] == '-' || str[right] == '+'))
-                {
-                    Debug.Log("<color=green> Es científico </color>");
-                    right++;
-                }
+                        right++;
 
-                if (isDelimiter(str[right]) == true && left == right)
+                if (isSeparator(str[right]) == true && left == right)
                 {
                     subStr = str[right].ToString();
                     if (subStr == ";" || subStr == "{" || subStr == "}")
@@ -207,7 +219,16 @@ public class TokenDetector : MonoBehaviour
                     else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        tag = "Separador";
+                        if (isDelimiter(str[right]))
+                        {
+                            tag = "Delimitador";
+                            if (str[right] == '\"' || str[right] == '\'')
+                                flagComilla = !flagComilla;
+                        }
+                        else
+                        {
+                            tag = "Separador";
+                        }
                         currentNode = CreateNode(tag, subStr);
                         errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
@@ -215,7 +236,7 @@ public class TokenDetector : MonoBehaviour
                     left = right;
                 }
                 else if ((right == len && left != right)
-                         || isDelimiter(str[right]) == true && left != right)
+                         || isSeparator(str[right]) == true && left != right)
                 {
                     
                     subStr = SubString(str, left, right - 1);
@@ -250,15 +271,20 @@ public class TokenDetector : MonoBehaviour
                         tag = "Boolean";
                     }
 
+                    else if(flagComilla)
+                    {
+                        tag = "Término";
+                    }
+
                     else if (ValidIdentifier(subStr) == true
-                            && isDelimiter(str[right - 1]) == false)
+                            && isSeparator(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
-                            && isDelimiter(str[right - 1]) == false)
+                            && isSeparator(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
@@ -280,7 +306,7 @@ public class TokenDetector : MonoBehaviour
                     right++;
                 }
 
-                if (isDelimiter(str[right - 1]) == true && left == right)
+                if (isSeparator(str[right - 1]) == true && left == right)
                 {
                     subStr = str[right].ToString();
                     if (subStr == ";" || subStr == "{" || subStr == "}")
@@ -296,7 +322,16 @@ public class TokenDetector : MonoBehaviour
                     else if (str[right] != (' '))
                     {
                         Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        tag = "Separador";
+                        if (isDelimiter(str[right]))
+                        {
+                            tag = "Delimitador";
+                            if (str[right] == '\"' || str[right] == '\'')
+                                flagComilla = !flagComilla;
+                        }
+                        else
+                        {
+                            tag = "Separador";
+                        }
                         currentNode = CreateNode(tag, subStr);
                         errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                     }
@@ -304,7 +339,7 @@ public class TokenDetector : MonoBehaviour
                     left = right;
                 }
                 else if ((right == len && left != right)
-                         || isDelimiter(str[right - 1]) == true && left != right)
+                         || isSeparator(str[right - 1]) == true && left != right)
                 {
 
                     subStr = SubString(str, left, right - 1);
@@ -339,19 +374,23 @@ public class TokenDetector : MonoBehaviour
                         tag = "Boolean";
                     }
 
+                    else if (flagComilla)
+                    {
+                        tag = "Término";
+                    }
+
                     else if (ValidIdentifier(subStr) == true
-                            && isDelimiter(str[right - 1]) == false)
+                            && isSeparator(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
-                            && isDelimiter(str[right - 1]) == false)
+                            && isSeparator(str[right - 1]) == false)
                     {
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
-
                     }
 
                     left = right;
@@ -367,6 +406,7 @@ public class TokenDetector : MonoBehaviour
             ErrorController.instance.SetLineHasError(true);
             UIController.instance.SetErrorText(lineNumber);
         }
+        CreateNode("FinSecuencia", "¬");
         return;
     }
 
