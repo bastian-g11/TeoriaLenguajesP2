@@ -1501,6 +1501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isValid: 1
   hasValue: 0
+  noVar: 0
 --- !u!1 &1819298171
 GameObject:
   m_ObjectHideFlags: 0

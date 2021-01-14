@@ -22,24 +22,37 @@ public class StructureValidator : MonoBehaviour
     public Node node = null;
     public bool isValid = true;
     public bool hasValue;
+    public bool noVar = false;
 
     public void StructureValidation()
     {
+        isValid = true;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
         S();
-        
+        if (isValid)
+        {
+            if (node != null)
+                Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
+            else
+                Debug.Log("SIRVIÓOOOOOO");
+        }
+        else
+        {
+            Debug.Log("Fallóoooo");
+        }
     }
 
     public void S()
     {
-        isValid = true;
         hasValue = false;
+        noVar = false;
+
+        if (node.GetValue() == "¬")
+            node = node.GetNextNode();
+
         //Agregar condicional para tomar decisión de cuál escoger
-        NtA();
-        if (isValid)
-            Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
-        else
-            Debug.Log("Fallóoooo");
+        if(node != null)
+            NtA();
     }
 
 
@@ -63,7 +76,10 @@ public class StructureValidator : MonoBehaviour
             default:
                 //Poner los errores
                 isValid = false;
-                Debug.Log("Falló en A con: " + node.GetValue());
+                if (node != null)
+                    Debug.Log("Falló en A con: " + node.GetValue());
+                else
+                    Debug.Log("Falló en A");
                 break;
         }
     }
@@ -145,6 +161,7 @@ public class StructureValidator : MonoBehaviour
     }
 
     public void ListaE() {
+        Debug.Log("Entró a ListaE con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -153,6 +170,10 @@ public class StructureValidator : MonoBehaviour
         {
             case "Boolean":
             case "Operador":
+                if(noVar)
+                {
+                    isValid = false;
+                }
                 node = node.GetNextNode();
                 T();
                 ListaE();
@@ -212,8 +233,10 @@ public class StructureValidator : MonoBehaviour
     }
 
     public void P() {
+
         if (node.GetValue() != "¬")
             hasValue = true;
+
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -260,6 +283,7 @@ public class StructureValidator : MonoBehaviour
 
             case "Operador":
             case "Separador":
+                noVar = true;
                 return;
 
             case "FinSecuencia":
@@ -284,7 +308,6 @@ public class StructureValidator : MonoBehaviour
         {
             case "Separador":
                 node = node.GetNextNode();
-                //StructureValidation();
                 return;
 
             case "Operador":
@@ -315,7 +338,7 @@ public class StructureValidator : MonoBehaviour
         {
             case "Separador":
                 node = node.GetNextNode();
-                //StructureValidation();
+                S();
                 return;
 
             case "FinSecuencia":

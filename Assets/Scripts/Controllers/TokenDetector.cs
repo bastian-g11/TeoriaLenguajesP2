@@ -29,8 +29,17 @@ public class TokenDetector : MonoBehaviour
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
             ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-            ch == '%' || ch == '^' || ch == '!' || ch == '\"' ||
-            ch == '\'')
+            ch == '%' || ch == '^' || ch == '\"' || ch == '\'')
+        {
+            return (true);
+        }
+        return (false);
+    }
+
+    public bool isBooleanSeparator(char ch)
+    {
+        if (ch == '&' || ch == '|' || ch == '!' ||
+            ch == '<' || ch == '>' || ch == '=')
         {
             return (true);
         }
@@ -61,7 +70,8 @@ public class TokenDetector : MonoBehaviour
 
     public bool isBoolean(string ch)
     {
-        if (ch == "&&" || ch == "||" || ch == "true" || ch == "false")
+        if (ch == "&&" || ch == "||" || ch == "true" || ch == "false" ||
+            ch == "<=" || ch == ">=" || ch == "==" || ch == "!=")
             return (true);
         return (false);
     }
@@ -72,7 +82,8 @@ public class TokenDetector : MonoBehaviour
         if (str[0] == '0' || str[0] == '1' || str[0] == '2' ||
             str[0] == '3' || str[0] == '4' || str[0] == '5' ||
             str[0] == '6' || str[0] == '7' || str[0] == '8' ||
-            str[0] == '9' || isSeparator(str[0]) == true)
+            str[0] == '9' || isSeparator(str[0]) == true || 
+            isBooleanSeparator(str[0]) == true)
             return (false);
         return (true);
     }
@@ -182,6 +193,7 @@ public class TokenDetector : MonoBehaviour
         bool isEnd = false;
         bool flagComilla = false;
         bool flagDT = false;
+        bool flagBooleanOp = false;
         string errors = null;
         string tag = null;
         string subStr = null;
@@ -196,9 +208,10 @@ public class TokenDetector : MonoBehaviour
                 right++;
                 if (right == len) isEnd = true;
             }
-
+            
             if (!isEnd)
             {
+
                 if (right > 0 && char.ToLower(str[right - 1]) == 'e'
                     && (str[right] == '-' || str[right] == '+'))
                         right++;
@@ -206,8 +219,10 @@ public class TokenDetector : MonoBehaviour
                 if (isSeparator(str[right]) == true && left == right)
                 {
                     subStr = str[right].ToString();
+
                     if (subStr == ";" || subStr == "{" || subStr == "}")
                         flagDT = false;
+                        
 
                     if (isOperator(str[right]) == true)
                     {
@@ -236,10 +251,18 @@ public class TokenDetector : MonoBehaviour
                     left = right;
                 }
                 else if ((right == len && left != right)
-                         || isSeparator(str[right]) == true && left != right)
+                         || (isSeparator(str[right]) == true && left != right)
+                         || (isBooleanSeparator(str[right]) == true && left != right))
                 {
                     
-                    subStr = SubString(str, left, right - 1);
+                    subStr = SubString(str, left, right - 1); //&
+
+                    if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
+                        subStr = SubString(str, left, right); //&&
+
+                    if (isBooleanSeparator(str[right]) == true)
+                        flagBooleanOp = true;
+                   
                     if (isKeyword(subStr) == true)
                     {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
@@ -269,6 +292,7 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
+                        right++;
                     }
 
                     else if(flagComilla)
@@ -299,7 +323,7 @@ public class TokenDetector : MonoBehaviour
 
             else
             {
-                if (right > 0 && char.ToLower(str[right - 1]) == 'e'
+                if (right > 0 && right < len && char.ToLower(str[right - 1]) == 'e'
                     && (str[right] == '-' || str[right] == '+'))
                 {
                     Debug.Log("<color=green> Es científico </color>");
