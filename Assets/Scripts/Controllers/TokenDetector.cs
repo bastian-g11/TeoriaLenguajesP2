@@ -29,7 +29,8 @@ public class TokenDetector : MonoBehaviour
             ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
             ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
             ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-            ch == '%' || ch == '^' || ch == '\"' || ch == '\'')
+            ch == '%' || ch == '^' || ch == '\"' || ch == '\''||
+            ch == '&' || ch == '|' || ch == '!')
         {
             return (true);
         }
@@ -82,7 +83,7 @@ public class TokenDetector : MonoBehaviour
         if (str[0] == '0' || str[0] == '1' || str[0] == '2' ||
             str[0] == '3' || str[0] == '4' || str[0] == '5' ||
             str[0] == '6' || str[0] == '7' || str[0] == '8' ||
-            str[0] == '9' || isSeparator(str[0]) == true || 
+            str[0] == '9' || isSeparator(str[0]) == true  || 
             isBooleanSeparator(str[0]) == true)
             return (false);
         return (true);
@@ -198,7 +199,6 @@ public class TokenDetector : MonoBehaviour
         string tag = null;
         string subStr = null;
         Node currentNode = null;
-        Debug.Log("Valor Tamaño: " + len);
 
         while (right < len && left <= right)
         {
@@ -219,8 +219,7 @@ public class TokenDetector : MonoBehaviour
                 if (isSeparator(str[right]) == true && left == right)
                 {
                     subStr = str[right].ToString();
-
-                    if (isBooleanSeparator(str[right]) && 
+                    if ((right + 1 < len) && isBooleanSeparator(str[right]) && 
                         isBooleanSeparator(str[right + 1]))
                     {
                         subStr = str[right].ToString();
@@ -269,16 +268,21 @@ public class TokenDetector : MonoBehaviour
                          || (isSeparator(str[right]) == true && left != right)
                          || (isBooleanSeparator(str[right]) == true && left != right))
                 {
-                    
+
                     subStr = SubString(str, left, right - 1); //&
 
-                    if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
-                        subStr = SubString(str, left, right); //&&
+                    //if (isBooleanSeparator(str[right]))
+                    //    flagBooleanOp = true;
 
-                    if (isBooleanSeparator(str[right]) == true)
-                        flagBooleanOp = true;
-                   
-                    if (isKeyword(subStr) == true)
+                        //if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
+                        //    subStr = SubString(str, left, right); //&&
+                        //else
+                        //    flagBooleanOp = false;
+
+                        //if (isBooleanSeparator(str[right]) == true)
+                        //    flagBooleanOp = true;
+
+                        if (isKeyword(subStr) == true)
                     {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
                         tag = "KeyWord";
@@ -307,7 +311,8 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
-                        right++;
+                        //flagBooleanOp = false;
+                        //right++;
                     }
 
                     else if(flagComilla)
@@ -328,6 +333,7 @@ public class TokenDetector : MonoBehaviour
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
+
                     left = right;
                     currentNode = CreateNode(tag, subStr);
                     errors = errors + TokenValidator.instance.TokenValidation(currentNode);
@@ -400,11 +406,13 @@ public class TokenDetector : MonoBehaviour
 
                     subStr = SubString(str, left, right - 1);
 
-                    if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
-                        subStr = SubString(str, left, right); //&&
+                    //if (flagBooleanOp && isBooleanSeparator(str[right - 1]) == true)
+                    //    subStr = SubString(str, left, right - 1); //&&
+                    //else
+                    //    flagBooleanOp = false;
 
-                    if (isBooleanSeparator(str[right]) == true)
-                        flagBooleanOp = true;
+                    //if (isBooleanSeparator(str[right -1]) == true)
+                    //    flagBooleanOp = true;
 
                     if (isKeyword(subStr) == true)
                     {
@@ -435,7 +443,8 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
-                        right++;
+                        //flagBooleanOp = false;
+                        //right++;
                     }
 
                     else if (flagComilla)

@@ -19,15 +19,18 @@ public class StructureValidator : MonoBehaviour
     }
     #endregion
 
-    public Node node = null;
+    public Node node, lastNode = null;
     public bool isValid = true;
     public bool hasValue;
     public bool noVar = false;
+    public bool hasDT = false;
 
     public void StructureValidation()
     {
         isValid = true;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
+        lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
+
         S();
         if (isValid)
         {
@@ -45,9 +48,10 @@ public class StructureValidator : MonoBehaviour
     public void S()
     {
         hasValue = false;
+        hasDT = false;
         noVar = false;
-
-        while(node != null && node.GetValue() == "¬")
+        Debug.Log("Volvió a S con: " + node.GetValue());
+        while (node != null && node.GetValue() == "¬" && node != lastNode)
         {
             node = node.GetNextNode();
         }
@@ -59,6 +63,7 @@ public class StructureValidator : MonoBehaviour
 
     public void NtA()
     {
+        Debug.Log("Entró a A con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -72,6 +77,9 @@ public class StructureValidator : MonoBehaviour
                 Separador();
                 Valor();
                 Fin();
+                return;
+
+            case "FinSecuencia":
                 return;
 
             default:
@@ -95,6 +103,7 @@ public class StructureValidator : MonoBehaviour
         {
             case "TipoDato":
                 node = node.GetNextNode();
+                hasDT = true;
                 return;
 
             case "Variable":
@@ -174,6 +183,7 @@ public class StructureValidator : MonoBehaviour
                 if(noVar)
                 {
                     isValid = false;
+                    Debug.Log("Falló en ListaE, dos operadores seguidos");
                 }
                 node = node.GetNextNode();
                 T();
@@ -290,6 +300,7 @@ public class StructureValidator : MonoBehaviour
                 }
 
                 //poner los errores
+                Debug.Log("Falló en P, falta cerrar comillas, apóstrofe o paréntesis");
                 isValid = false;
                 return;
 
@@ -311,6 +322,7 @@ public class StructureValidator : MonoBehaviour
 
             case "Operador":
             case "Separador":
+                //noVar implicar que <P> se reemplazó por lambda y entonces habrían 2 operadores seguidos
                 noVar = true;
                 return;
 
@@ -335,6 +347,11 @@ public class StructureValidator : MonoBehaviour
         switch (nodeType)
         {
             case "Separador":
+                if (!hasDT)
+                {
+                    isValid = false;
+                    Debug.Log("Falló en separador, falta inicializar variable, NO hay tipo de dato");
+                }
                 node = node.GetNextNode();
                 return;
 
@@ -345,13 +362,15 @@ public class StructureValidator : MonoBehaviour
                     return;
                 }
                 //Poner los errores
+
+                Debug.Log("Falló en Separador, operador no válido después de variable");
                 isValid = false;
                 return;
 
             default:
                 //Poner los errores
                 isValid = false;
-                Debug.Log("Falló en Separador con: "+node.GetValue());
+                Debug.Log("Falló en Separador con: "+node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
                 break;
         }
     }
@@ -370,9 +389,12 @@ public class StructureValidator : MonoBehaviour
                 return;
 
             case "FinSecuencia":
-                Debug.Log("Fin de secuencia en Fin");
+               Debug.Log("Fin de secuencia en Fin");
                if(hasValue)
+                {
                     isValid = false;
+                    Debug.Log("Falló en Fin, no hay punto y coma");
+                }
                 return;
 
             default:
