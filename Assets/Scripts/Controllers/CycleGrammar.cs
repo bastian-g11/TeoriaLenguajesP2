@@ -115,6 +115,13 @@ public class CycleGrammar
     public void ListaE()
     {
         Debug.Log("Entró a ListaE de B con: " + node.GetValue());
+        //Avanzar hasta que no encuentre fin de secuencia
+        while (node != null && node.GetValue() == "¬" && node != lastNode)
+        {
+            node = node.GetNextNode();
+        }
+        Debug.Log("Entró a ListaE de B 2 con: " + node.GetValue());
+
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -124,6 +131,11 @@ public class CycleGrammar
             case "Boolean":
             case "Operador":
                 node = node.GetNextNode();
+                //Avanzar hasta que no encuentre fin de secuencia
+                while (node != null && node.GetValue() == "¬" && node != lastNode)
+                {
+                    node = node.GetNextNode();
+                }
                 T();
                 ListaE();
                 return;

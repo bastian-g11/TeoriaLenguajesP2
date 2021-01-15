@@ -136,6 +136,13 @@ public class VariableGrammar
     public void ListaE()
     {
         Debug.Log("Entró a ListaE de A con: " + node.GetValue());
+        //Avanzar hasta que no encuentre fin de secuencia
+        while (node != null && node.GetValue() == "¬" && node != lastNode)
+        {
+            node = node.GetNextNode();
+            StructureValidator.instance.lineNumber++;
+        }
+        Debug.Log("Entró a ListaE de A 2 con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -150,6 +157,12 @@ public class VariableGrammar
                     Debug.Log("Falló en ListaE de A, dos operadores seguidos");
                 }
                 node = node.GetNextNode();
+                //Avanzar hasta que no encuentre fin de secuencia
+                while (node != null && node.GetValue() == "¬" && node != lastNode)
+                {
+                    node = node.GetNextNode();
+                    StructureValidator.instance.lineNumber++;
+                }
                 T();
                 ListaE();
                 return;
@@ -365,6 +378,11 @@ public class VariableGrammar
                 {
                     isValid = false;
                     Debug.Log("Falló en Fin, no hay punto y coma");
+                    StructureValidator.instance.errors =
+                        StructureValidator.instance.errors + "Falta punto y coma";
+
+                    //Continúa a:
+                    
                 }
                 return;
 

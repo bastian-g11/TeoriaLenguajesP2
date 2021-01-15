@@ -496,6 +496,7 @@ public class TokenDetector : MonoBehaviour
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
             UIController.instance.SetErrorText(lineNumber);
+            ErrorController.instance.SetLineHasError(false);
         }
         CreateNode("FinSecuencia", "¬");
         return;
