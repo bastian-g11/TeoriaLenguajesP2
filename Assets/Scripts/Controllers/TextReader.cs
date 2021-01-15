@@ -8,6 +8,9 @@ public class TextReader : MonoBehaviour
 {
     #region singleton
     public static TextReader instance;
+    public VariableGrammar varGram;
+    public CycleGrammar cycGram;
+
     void Awake()
     {
         if (instance != null)
@@ -20,6 +23,12 @@ public class TextReader : MonoBehaviour
         }
     }
     #endregion
+
+    private void Start()
+    {
+        varGram = new VariableGrammar();
+        cycGram = new CycleGrammar();
+    }
 
     public int lineNumber = 0;
 
