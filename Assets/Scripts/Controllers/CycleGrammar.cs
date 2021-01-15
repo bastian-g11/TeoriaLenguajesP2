@@ -295,6 +295,11 @@ public class CycleGrammar
                     if (node != null && node.GetValue() == ")")
                     {
                         node = node.GetNextNode();
+                        //Avanzar hasta que no encuentre fin de secuencia
+                        while (node != null && node.GetValue() == "¬" && node != lastNode)
+                        {
+                            node = node.GetNextNode();
+                        }
                         return;
                     }
                     //poner los errores
@@ -308,11 +313,16 @@ public class CycleGrammar
                     node = node.GetNextNode();
                     StructureValidator.instance.node = node;
                     StructureValidator.instance.S();
-                    Debug.Log("Abre Llave en B Delimitador");
-                    Valor();
+                    node = StructureValidator.instance.node;
+                    Debug.Log("Abre Llave en B Delimitador: "+ node.GetValue());
                     if (node != null && node.GetValue() == "}")
                     {
                         node = node.GetNextNode();
+                        //Avanzar hasta que no encuentre fin de secuencia
+                        while (node != null && node.GetValue() == "¬" && node != lastNode)
+                        {
+                            node = node.GetNextNode();
+                        }
                         return;
                     }
                     //poner los errores

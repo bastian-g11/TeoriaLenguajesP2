@@ -356,6 +356,7 @@ public class VariableGrammar
                 node = node.GetNextNode();
                 StructureValidator.instance.node = node;
                 StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
                 return;
 
             case "FinSecuencia":

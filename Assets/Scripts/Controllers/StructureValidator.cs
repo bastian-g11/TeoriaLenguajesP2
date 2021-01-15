@@ -42,6 +42,7 @@ public class StructureValidator : MonoBehaviour
         else
         {
             Debug.Log("Fallóoooo");
+            Debug.Log("Hay errores lógicos en la línea");
         }
     }
 
