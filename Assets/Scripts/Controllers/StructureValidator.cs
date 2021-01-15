@@ -276,7 +276,7 @@ public class StructureValidator : MonoBehaviour
                 else if(node != null && node.GetValue() == "\"")
                 {
                     node = node.GetNextNode();
-                    if (node.GetClassType() == "Termino")
+                    while (node != null && node.GetClassType() == "Termino" && node != lastNode)
                         node = node.GetNextNode();
                     if (node != null && node.GetValue() == "\"")
                     {
@@ -289,7 +289,7 @@ public class StructureValidator : MonoBehaviour
                 else if (node != null && node.GetValue() == "\'")
                 {
                     node = node.GetNextNode();
-                    if (node.GetClassType() == "Termino")
+                    while (node != null && node.GetClassType() == "Termino" && node != lastNode)
                         node = node.GetNextNode();
                     if (node != null && node.GetValue() == "\'")
                     {

@@ -64,7 +64,7 @@ public class TokenDetector : MonoBehaviour
     {
         if (ch == '+' || ch == '-' || ch == '*' ||
             ch == '/' || ch == '>' || ch == '<' ||
-            ch == '=' || ch == '%' || ch == '^' || ch == '!')
+            ch == '=' || ch == '%' || ch == '^')
             return (true);
         return (false);
     }
@@ -193,8 +193,8 @@ public class TokenDetector : MonoBehaviour
         int len = str.Length;
         bool isEnd = false;
         bool flagComilla = false;
+        bool flagApostrofe = false;
         bool flagDT = false;
-        bool flagBooleanOp = false;
         string errors = null;
         string tag = null;
         string subStr = null;
@@ -225,6 +225,10 @@ public class TokenDetector : MonoBehaviour
                         subStr = str[right].ToString();
                         subStr = subStr + str[right + 1].ToString();
                         tag = "Boolean";
+                        if (flagComilla || flagApostrofe)
+                        {
+                            tag = "Termino";
+                        }
                         currentNode = CreateNode(tag, subStr);
                         errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         right = right + 2;
@@ -239,6 +243,10 @@ public class TokenDetector : MonoBehaviour
                         {
                             Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                             tag = "Operador";
+                            if (flagComilla || flagApostrofe)
+                            {
+                                tag = "Termino";
+                            }
                             currentNode = CreateNode(tag, subStr);
                             errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
@@ -248,12 +256,25 @@ public class TokenDetector : MonoBehaviour
                             if (isDelimiter(str[right]))
                             {
                                 tag = "Delimitador";
-                                if (str[right] == '\"' || str[right] == '\'')
+                                if (str[right] == '\"' && !flagApostrofe)
                                     flagComilla = !flagComilla;
+
+                                if(str[right] == '\'' && !flagComilla)
+                                    flagApostrofe = !flagApostrofe;
+
+                                if ((str[right] == '\'' && flagComilla)
+                                    || str[right] == '\"' && flagApostrofe)
+                                {
+                                    tag = "Termino";
+                                }
                             }
                             else
                             {
                                 tag = "Separador";
+                                if (flagComilla || flagApostrofe)
+                                {
+                                    tag = "Termino";
+                                }
                             }
                             currentNode = CreateNode(tag, subStr);
                             errors = errors + TokenValidator.instance.TokenValidation(currentNode);
@@ -269,18 +290,7 @@ public class TokenDetector : MonoBehaviour
                          || (isBooleanSeparator(str[right]) == true && left != right))
                 {
 
-                    subStr = SubString(str, left, right - 1); //&
-
-                    //if (isBooleanSeparator(str[right]))
-                    //    flagBooleanOp = true;
-
-                        //if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
-                        //    subStr = SubString(str, left, right); //&&
-                        //else
-                        //    flagBooleanOp = false;
-
-                        //if (isBooleanSeparator(str[right]) == true)
-                        //    flagBooleanOp = true;
+                    subStr = SubString(str, left, right - 1);
 
                         if (isKeyword(subStr) == true)
                     {
@@ -311,13 +321,6 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
-                        //flagBooleanOp = false;
-                        //right++;
-                    }
-
-                    else if(flagComilla)
-                    {
-                        tag = "Termino";
                     }
 
                     else if (ValidIdentifier(subStr) == true
@@ -332,6 +335,11 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
+                    }
+
+                    if (flagComilla || flagApostrofe)
+                    {
+                        tag = "Termino";
                     }
 
                     left = right;
@@ -361,6 +369,10 @@ public class TokenDetector : MonoBehaviour
                         subStr = str[right].ToString();
                         subStr = subStr + str[right + 1].ToString();
                         tag = "Boolean";
+                        if (flagComilla || flagApostrofe)
+                        {
+                            tag = "Termino";
+                        }
                         currentNode = CreateNode(tag, subStr);
                         errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         right = right + 2;
@@ -375,6 +387,10 @@ public class TokenDetector : MonoBehaviour
                         {
                             Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                             tag = "Operador";
+                            if (flagComilla || flagApostrofe)
+                            {
+                                tag = "Termino";
+                            }
                             currentNode = CreateNode(tag, subStr);
                             errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
@@ -384,12 +400,25 @@ public class TokenDetector : MonoBehaviour
                             if (isDelimiter(str[right]))
                             {
                                 tag = "Delimitador";
-                                if (str[right] == '\"' || str[right] == '\'')
+                                if (str[right] == '\"' && !flagApostrofe)
                                     flagComilla = !flagComilla;
+
+                                if (str[right] == '\'' && !flagComilla)
+                                    flagApostrofe = !flagApostrofe;
+
+                                if ((str[right] == '\'' && flagComilla)
+                                    || str[right] == '\"' && flagApostrofe)
+                                {
+                                    tag = "Termino";
+                                }
                             }
                             else
                             {
                                 tag = "Separador";
+                                if (flagComilla || flagApostrofe)
+                                {
+                                    tag = "Termino";
+                                }
                             }
                             currentNode = CreateNode(tag, subStr);
                             errors = errors + TokenValidator.instance.TokenValidation(currentNode);
@@ -405,14 +434,6 @@ public class TokenDetector : MonoBehaviour
                 {
 
                     subStr = SubString(str, left, right - 1);
-
-                    //if (flagBooleanOp && isBooleanSeparator(str[right - 1]) == true)
-                    //    subStr = SubString(str, left, right - 1); //&&
-                    //else
-                    //    flagBooleanOp = false;
-
-                    //if (isBooleanSeparator(str[right -1]) == true)
-                    //    flagBooleanOp = true;
 
                     if (isKeyword(subStr) == true)
                     {
@@ -443,13 +464,6 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
-                        //flagBooleanOp = false;
-                        //right++;
-                    }
-
-                    else if (flagComilla)
-                    {
-                        tag = "Termino";
                     }
 
                     else if (ValidIdentifier(subStr) == true
@@ -466,6 +480,10 @@ public class TokenDetector : MonoBehaviour
                         tag = "Variable";
                     }
 
+                    if (flagComilla || flagApostrofe)
+                    {
+                        tag = "Termino";
+                    }
                     left = right;
                     currentNode = CreateNode(tag, subStr);
                     errors = errors + TokenValidator.instance.TokenValidation(currentNode);
