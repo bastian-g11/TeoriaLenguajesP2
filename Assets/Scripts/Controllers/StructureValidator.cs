@@ -34,18 +34,9 @@ public class StructureValidator : MonoBehaviour
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
         lineNumber = 1;
         S();
-        if (isValid)
-        {
-            if (node != null)
-                Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
-            else
-                Debug.Log("SIRVIÓOOOOOO");
-        }
-        else
-        {
-            Debug.Log("Fallóoooo");
-            Debug.Log("Hay errores lógicos en la línea");
-        }
+        if (node != null)
+            Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
+
         //Debug.Log("Número de líneas: " + lineNumber);
     }
 

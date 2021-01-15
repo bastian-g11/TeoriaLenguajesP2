@@ -6,7 +6,6 @@ public class VariableGrammar
 {
     public Node node;
     public Node lastNode;
-    public bool isValid = true;
     public bool hasValue;
     public bool noVar = false;
     public bool hasDT = false;
@@ -15,7 +14,6 @@ public class VariableGrammar
     {
         node = StructureValidator.instance.node;
         lastNode = StructureValidator.instance.lastNode;
-        isValid = StructureValidator.instance.isValid;
         hasValue = StructureValidator.instance.hasValue;
         noVar = StructureValidator.instance.noVar;
         hasDT = StructureValidator.instance.hasDT;
@@ -36,7 +34,6 @@ public class VariableGrammar
                 Fin();
 
                 StructureValidator.instance.node = node;
-                StructureValidator.instance.isValid = isValid;
                 return;
 
             case "FinSecuencia":
@@ -44,9 +41,7 @@ public class VariableGrammar
 
             default:
                 //Poner los errores
-                isValid = false;
                 StructureValidator.instance.node = node;
-                StructureValidator.instance.isValid = isValid;
                 if (node != null)
                     Debug.Log("Falló en A con: " + node.GetValue());
                 else
@@ -73,7 +68,6 @@ public class VariableGrammar
 
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en TipoDato con: " + node.GetValue());
                 break;
         }
@@ -91,9 +85,12 @@ public class VariableGrammar
                 node = node.GetNextNode();
                 return;
 
+            case "KeyWord":
+                //Se ignora
+                return;
+
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en Variable con: " + node.GetValue());
                 break;
         }
@@ -134,7 +131,6 @@ public class VariableGrammar
             default:
 
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en Valor con: " + node.GetValue());
                 break;
         }
@@ -143,12 +139,7 @@ public class VariableGrammar
     public void ListaE()
     {
         Debug.Log("Entró a ListaE de A con: " + node.GetValue());
-        //Avanzar hasta que no encuentre fin de secuencia
-        while (node != null && node.GetValue() == "¬" && node != lastNode)
-        {
-            node = node.GetNextNode();
-            StructureValidator.instance.lineNumber++;
-        }
+
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -159,17 +150,12 @@ public class VariableGrammar
             case "Operador":
                 if (noVar)
                 {
-                    //isValid = false;
-                    Debug.Log("Falló en ListaE de A, dos operadores seguidos");
+                    //SE AGREGÓ PARA MOSTRAR 
+                    Debug.Log("Falló en ListaE de A, dos o más operadores seguidos");
+                    //
                 }
                 node = node.GetNextNode();
 
-                //Avanzar hasta que no encuentre fin de secuencia
-                while (node != null && node.GetValue() == "¬" && node != lastNode)
-                {
-                    node = node.GetNextNode();
-                    StructureValidator.instance.lineNumber++;
-                }
                 T();
                 ListaE();
                 return;
@@ -180,7 +166,6 @@ public class VariableGrammar
             case "Delimitador":
                 if (node != null && node.GetValue() == ")")
                     return;
-                isValid = false;
                 return;
 
             case "FinSecuencia":
@@ -195,7 +180,6 @@ public class VariableGrammar
             default:
 
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en ListaE con: " + node.GetValue());
                 break;
         }
@@ -230,7 +214,6 @@ public class VariableGrammar
                 if (node == null)
                     return;
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en T con: " + node.GetValue());
                 break;
         }
@@ -295,7 +278,6 @@ public class VariableGrammar
 
                 //poner los errores
                 Debug.Log("Falló en P, falta cerrar comillas, apóstrofe o paréntesis");
-                isValid = false;
                 return;
 
             case "Variable":
@@ -312,7 +294,6 @@ public class VariableGrammar
                     node = node.GetNextNode();
                     return;
                 }
-                isValid = false;
                 return;
 
             case "Operador":
@@ -328,13 +309,13 @@ public class VariableGrammar
              //SE AGREGÓ PARA MOSTRAR ERRORES
             case "KeyWord":
                 //Se ignora
+                Debug.Log("En P: nombre de variable es palabra reservada");
                 node = node.GetNextNode();
                 return;
                 //
             default:
 
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en P con: " + node.GetValue());
                 break;
         }
@@ -351,7 +332,6 @@ public class VariableGrammar
             case "Separador":
                 if (!hasDT)
                 {
-                    isValid = false;
                     Debug.Log("Falló en separador, falta inicializar variable, NO hay tipo de dato");
                 }
                 node = node.GetNextNode();
@@ -366,12 +346,10 @@ public class VariableGrammar
                 //Poner los errores
 
                 Debug.Log("Falló en Separador, operador no válido después de variable");
-                isValid = false;
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en Separador con: " + node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
                 break;
         }
@@ -397,19 +375,20 @@ public class VariableGrammar
                 Debug.Log("Fin de secuencia en Fin");
                 if (hasValue)
                 {
-                    isValid = false;
                     Debug.Log("Falló en Fin, no hay punto y coma");
-                    StructureValidator.instance.errors =
-                        StructureValidator.instance.errors + "Falta punto y coma";
+                    //StructureValidator.instance.errors =
+                    //    StructureValidator.instance.errors + "Falta punto y coma";
 
-                    //node = node.GetNextNode();
+                    node = node.GetNextNode();
+                    StructureValidator.instance.node = node;
+                    StructureValidator.instance.S();
+                    node = StructureValidator.instance.node;
                     return;
                 }
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 if (node != null)
                     Debug.Log("Falló en Fin con: " + node.GetValue());
                 else
