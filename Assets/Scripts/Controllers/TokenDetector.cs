@@ -363,10 +363,18 @@ public class TokenDetector : MonoBehaviour
                     left = right;
                 }
                 else if ((right == len && left != right)
-                         || isSeparator(str[right - 1]) == true && left != right)
+                         || isSeparator(str[right - 1]) == true && left != right
+                         || (isBooleanSeparator(str[right - 1]) == true && left != right))
                 {
 
                     subStr = SubString(str, left, right - 1);
+
+                    if (flagBooleanOp && isBooleanSeparator(str[right]) == true)
+                        subStr = SubString(str, left, right); //&&
+
+                    if (isBooleanSeparator(str[right]) == true)
+                        flagBooleanOp = true;
+
                     if (isKeyword(subStr) == true)
                     {
                         Debug.Log("'%s' IS A KEYWORD\n" + subStr);
@@ -396,6 +404,7 @@ public class TokenDetector : MonoBehaviour
                     {
                         Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
+                        right++;
                     }
 
                     else if (flagComilla)
