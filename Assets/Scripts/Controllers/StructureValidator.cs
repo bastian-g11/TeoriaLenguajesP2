@@ -47,14 +47,15 @@ public class StructureValidator : MonoBehaviour
         hasValue = false;
         noVar = false;
 
-        if (node.GetValue() == "¬")
+        while(node != null && node.GetValue() == "¬")
+        {
             node = node.GetNextNode();
+        }
 
         //Agregar condicional para tomar decisión de cuál escoger
-        if(node != null)
+        if (node != null)
             NtA();
     }
-
 
     public void NtA()
     {
@@ -259,6 +260,33 @@ public class StructureValidator : MonoBehaviour
                 else if(node != null && node.GetValue() == ")")
                 {
                     return;
+                }
+
+                //Caso Comillas
+                else if(node != null && node.GetValue() == "\"")
+                {
+                    node = node.GetNextNode();
+                    if (node.GetClassType() == "Termino")
+                        node = node.GetNextNode();
+                    if (node != null && node.GetValue() == "\"")
+                    {
+                        node = node.GetNextNode();
+                        return;
+                    }
+                }
+
+                //Caso Apóstrofe
+                else if (node != null && node.GetValue() == "\'")
+                {
+                    node = node.GetNextNode();
+                    if (node.GetClassType() == "Termino")
+                        node = node.GetNextNode();
+                    if (node != null && node.GetValue() == "\'")
+                    {
+                        node = node.GetNextNode();
+                        
+                        return;
+                    }
                 }
 
                 //poner los errores

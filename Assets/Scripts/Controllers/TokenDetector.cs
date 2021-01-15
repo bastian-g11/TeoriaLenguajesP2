@@ -220,35 +220,50 @@ public class TokenDetector : MonoBehaviour
                 {
                     subStr = str[right].ToString();
 
-                    if (subStr == ";" || subStr == "{" || subStr == "}")
-                        flagDT = false;
-                        
+                    if (isBooleanSeparator(str[right]) && 
+                        isBooleanSeparator(str[right + 1]))
+                    {
+                        subStr = str[right].ToString();
+                        subStr = subStr + str[right + 1].ToString();
+                        tag = "Boolean";
+                        currentNode = CreateNode(tag, subStr);
+                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
+                        right = right + 2;
+                        left = right;
+                    }
+                    else
+                    {
+                        if (subStr == ";" || subStr == "{" || subStr == "}")
+                            flagDT = false;
 
-                    if (isOperator(str[right]) == true)
-                    {
-                        Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
-                        tag = "Operador";
-                        currentNode = CreateNode(tag, subStr);
-                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
-                    }
-                    else if (str[right] != (' '))
-                    {
-                        Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        if (isDelimiter(str[right]))
+                        if (isOperator(str[right]) == true)
                         {
-                            tag = "Delimitador";
-                            if (str[right] == '\"' || str[right] == '\'')
-                                flagComilla = !flagComilla;
+                            Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
+                            tag = "Operador";
+                            currentNode = CreateNode(tag, subStr);
+                            errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
-                        else
+                        else if (str[right] != (' '))
                         {
-                            tag = "Separador";
+                            Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
+                            if (isDelimiter(str[right]))
+                            {
+                                tag = "Delimitador";
+                                if (str[right] == '\"' || str[right] == '\'')
+                                    flagComilla = !flagComilla;
+                            }
+                            else
+                            {
+                                tag = "Separador";
+                            }
+                            currentNode = CreateNode(tag, subStr);
+                            errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
-                        currentNode = CreateNode(tag, subStr);
-                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
+                        right++;
+                        left = right;
                     }
-                    right++;
-                    left = right;
+
+                    
                 }
                 else if ((right == len && left != right)
                          || (isSeparator(str[right]) == true && left != right)
@@ -297,7 +312,7 @@ public class TokenDetector : MonoBehaviour
 
                     else if(flagComilla)
                     {
-                        tag = "Término";
+                        tag = "Termino";
                     }
 
                     else if (ValidIdentifier(subStr) == true
@@ -333,34 +348,50 @@ public class TokenDetector : MonoBehaviour
                 if (isSeparator(str[right - 1]) == true && left == right)
                 {
                     subStr = str[right].ToString();
-                    if (subStr == ";" || subStr == "{" || subStr == "}")
-                        flagDT = false;
 
-                    if (isOperator(str[right]) == true)
+                    if (isBooleanSeparator(str[right]) && 
+                        isBooleanSeparator(str[right + 1]))
                     {
-                        Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
-                        tag = "Operador";
+                        subStr = str[right].ToString();
+                        subStr = subStr + str[right + 1].ToString();
+                        tag = "Boolean";
                         currentNode = CreateNode(tag, subStr);
                         errors = errors + TokenValidator.instance.TokenValidation(currentNode);
+                        right = right + 2;
+                        left = right;
                     }
-                    else if (str[right] != (' '))
+                    else
                     {
-                        Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
-                        if (isDelimiter(str[right]))
+                        if (subStr == ";" || subStr == "{" || subStr == "}")
+                            flagDT = false;
+
+                        if (isOperator(str[right]) == true)
                         {
-                            tag = "Delimitador";
-                            if (str[right] == '\"' || str[right] == '\'')
-                                flagComilla = !flagComilla;
+                            Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
+                            tag = "Operador";
+                            currentNode = CreateNode(tag, subStr);
+                            errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
-                        else
+                        else if (str[right] != (' '))
                         {
-                            tag = "Separador";
+                            Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
+                            if (isDelimiter(str[right]))
+                            {
+                                tag = "Delimitador";
+                                if (str[right] == '\"' || str[right] == '\'')
+                                    flagComilla = !flagComilla;
+                            }
+                            else
+                            {
+                                tag = "Separador";
+                            }
+                            currentNode = CreateNode(tag, subStr);
+                            errors = errors + TokenValidator.instance.TokenValidation(currentNode);
                         }
-                        currentNode = CreateNode(tag, subStr);
-                        errors = errors + TokenValidator.instance.TokenValidation(currentNode);
+                        right++;
+                        left = right;
                     }
-                    right++;
-                    left = right;
+                   
                 }
                 else if ((right == len && left != right)
                          || isSeparator(str[right - 1]) == true && left != right
@@ -409,7 +440,7 @@ public class TokenDetector : MonoBehaviour
 
                     else if (flagComilla)
                     {
-                        tag = "Término";
+                        tag = "Termino";
                     }
 
                     else if (ValidIdentifier(subStr) == true
