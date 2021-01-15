@@ -124,6 +124,13 @@ public class VariableGrammar
                 ListaE();
                 return;
 
+            //SE AGREGÓ PARA RECONOCER ERRORES
+            case "KeyWord":
+                Debug.Log("Nombre de variable es palabra reservada");
+                T();
+                ListaE();
+                return;
+
             default:
 
                 //Poner los errores
@@ -142,7 +149,6 @@ public class VariableGrammar
             node = node.GetNextNode();
             StructureValidator.instance.lineNumber++;
         }
-        Debug.Log("Entró a ListaE de A 2 con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -153,10 +159,11 @@ public class VariableGrammar
             case "Operador":
                 if (noVar)
                 {
-                    isValid = false;
+                    //isValid = false;
                     Debug.Log("Falló en ListaE de A, dos operadores seguidos");
                 }
                 node = node.GetNextNode();
+
                 //Avanzar hasta que no encuentre fin de secuencia
                 while (node != null && node.GetValue() == "¬" && node != lastNode)
                 {
@@ -180,6 +187,11 @@ public class VariableGrammar
                 Debug.Log("Fin de secuencia en ListaE");
                 return;
 
+            //SE AGREGÓ PARA MOSTRAR ERRORES
+            case "KeyWord":
+                return;
+                //
+
             default:
 
                 //Poner los errores
@@ -197,6 +209,9 @@ public class VariableGrammar
 
         switch (nodeType)
         {
+            //SE AGREGÓ PARA MOSTRAR ERRORES
+            case "KeyWord":
+                //
             case "Delimitador":
             case "Numero":
             case "Variable":
@@ -310,6 +325,12 @@ public class VariableGrammar
                 Debug.Log("Fin de Secuencia en P");
                 return;
 
+             //SE AGREGÓ PARA MOSTRAR ERRORES
+            case "KeyWord":
+                //Se ignora
+                node = node.GetNextNode();
+                return;
+                //
             default:
 
                 //Poner los errores
@@ -381,8 +402,8 @@ public class VariableGrammar
                     StructureValidator.instance.errors =
                         StructureValidator.instance.errors + "Falta punto y coma";
 
-                    //Continúa a:
-                    
+                    //node = node.GetNextNode();
+                    return;
                 }
                 return;
 

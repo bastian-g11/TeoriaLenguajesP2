@@ -46,7 +46,7 @@ public class StructureValidator : MonoBehaviour
             Debug.Log("Fallóoooo");
             Debug.Log("Hay errores lógicos en la línea");
         }
-        Debug.Log("Número de líneas: " + lineNumber);
+        //Debug.Log("Número de líneas: " + lineNumber);
     }
 
     public void S()
@@ -66,15 +66,15 @@ public class StructureValidator : MonoBehaviour
             if (node.GetClassType() == "TipoDato" || node.GetClassType() == "Variable")
             {
                 TextReader.instance.varGram.NtA();
-                Debug.Log("Valor de errors: " + errors);
-                if (errors != null)
-                {
-                    Debug.Log("Entr+o");
-                    ErrorController.instance.SetErrorMessage(errors);
-                    ErrorController.instance.SetLineHasError(true);
-                    UIController.instance.SetErrorText(lineNumber);
-                    errors = null;
-                }
+                //Debug.Log("Valor de errors: " + errors);
+                //if (errors != null)
+                //{
+                //    Debug.Log("Entr+o");
+                //    ErrorController.instance.SetErrorMessage(errors);
+                //    ErrorController.instance.SetLineHasError(true);
+                //    UIController.instance.SetErrorText(lineNumber);
+                //    errors = null;
+                //}
             }
             else if (node.GetClassType() == "KeyWord")
             {
