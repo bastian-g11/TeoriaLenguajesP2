@@ -202,6 +202,8 @@ public class CycleGrammar
                 }
                 //ERROR
                 Debug.Log("Dos operadores juntos: Boolean después de otro operador");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Dos operadores juntos: Boolean después de otro operador\n";
                 return;
 
             case "KeyWord":
@@ -213,7 +215,8 @@ public class CycleGrammar
             default:
                 //Poner los errores
                 Debug.Log("Dos o más operadores seguidos");
-
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Dos o más operadores seguidos\n";
                 break;
         }
 
@@ -269,6 +272,8 @@ public class CycleGrammar
 
                 //poner los errores
                 Debug.Log("Falló en P en B, falta cerrar comillas, apóstrofe o paréntesis");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta cerrar comillas, apóstrofe o paréntesis\n";
                 return;
 
             case "Variable":
@@ -290,6 +295,8 @@ public class CycleGrammar
             case "KeyWord":
                 //ERROR
                 Debug.Log("Nombre de variable contiene palabra reservada");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Nombre de variable contiene palabra reservada\n";
                 node = node.GetNextNode();
                 return;
 
@@ -327,6 +334,8 @@ public class CycleGrammar
                     }
                     //poner los errores
                     Debug.Log("Falló en Delimitador B, falta cerrar un Paréntesis");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta cerrar un paréntesis\n";
                     return;
                 }
 
@@ -349,20 +358,38 @@ public class CycleGrammar
                     }
                     //poner los errores
                     Debug.Log("Falló en Delimitador B, falta cerrar una LLave");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta cerrar una llave\n";
                     return;
                 }
 
                 //poner los errores
                 Debug.Log("Faltan llaves o Paréntesis");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Faltan llaves o paréntesis\n";
                 return;
             case "FinSecuencia":
                 //ERROR
                 Debug.Log("Faltan llaves o Paréntesis");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "- Faltan llaves o paréntesis\n";
                 return;
 
             case "TipoDato":
                 //ERROR
                 Debug.Log("Faltan llaves o Paréntesis después de Palabra Reservada");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "- Faltan llaves o Paréntesis después de Palabra Reservada\n";
+                StructureValidator.instance.node = node;
+                StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
+                return;
+
+            case "Variable":
+                //ERROR
+                Debug.Log("Faltan llaves o Paréntesis después de Palabra Reservada");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "- Faltan llaves o Paréntesis después de Palabra Reservada\n";
                 StructureValidator.instance.node = node;
                 StructureValidator.instance.S();
                 node = StructureValidator.instance.node;
@@ -405,6 +432,8 @@ public class CycleGrammar
             default:
                 //Poner los errores
                 Debug.Log("Falló en B Separador con: " + node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "- No hay punto y coma ni igual ó dos o más variables seguidas\n";
                 break;
         }
     }

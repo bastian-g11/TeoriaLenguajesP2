@@ -124,6 +124,8 @@ public class VariableGrammar
             //SE AGREGÓ PARA RECONOCER ERRORES
             case "KeyWord":
                 Debug.Log("Nombre de variable es palabra reservada");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Nombre de variable es palabra reservada \n";
                 T();
                 ListaE();
                 return;
@@ -152,6 +154,8 @@ public class VariableGrammar
                 {
                     //SE AGREGÓ PARA MOSTRAR 
                     Debug.Log("Falló en ListaE de A, dos o más operadores seguidos");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Dos o más operadores seguidos \n";
                     //
                 }
                 node = node.GetNextNode();
@@ -278,6 +282,8 @@ public class VariableGrammar
 
                 //poner los errores
                 Debug.Log("Falló en P, falta cerrar comillas, apóstrofe o paréntesis");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta cerrar comillas, apóstrofe o paréntesis\n";
                 return;
 
             case "Variable":
@@ -310,6 +316,8 @@ public class VariableGrammar
             case "KeyWord":
                 //Se ignora
                 Debug.Log("En P: nombre de variable es palabra reservada");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Nombre de variable es palabra reservada\n";
                 node = node.GetNextNode();
                 return;
                 //
@@ -333,6 +341,8 @@ public class VariableGrammar
                 if (!hasDT)
                 {
                     Debug.Log("Falló en separador, falta inicializar variable, NO hay tipo de dato");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta tipo de dato en variable\n";
                 }
                 node = node.GetNextNode();
                 return;
@@ -346,11 +356,23 @@ public class VariableGrammar
                 //Poner los errores
 
                 Debug.Log("Falló en Separador, operador no válido después de variable");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Operador no válido después de variable\n";
+
+                return;
+
+            case "FinSecuencia":
+                Debug.Log("Falló en Separador con:  no hay punto y coma");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta punto y coma\n";
                 return;
 
             default:
                 //Poner los errores
-                Debug.Log("Falló en Separador con: " + node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
+
+                Debug.Log("Falló en Separador con: " + node.GetValue() + " dos o más variables seguidas");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Error en declaración de variable\n";
                 break;
         }
     }
@@ -377,16 +399,16 @@ public class VariableGrammar
                 {
                     //ERROR 
                     Debug.Log("Falló en Fin, no hay punto y coma");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "- Falta punto y coma\n";
                     //StructureValidator.instance.errors =
                     //    StructureValidator.instance.errors + "Falta punto y coma";
-
+                }
                     node = node.GetNextNode();
                     StructureValidator.instance.node = node;
                     StructureValidator.instance.S();
                     node = StructureValidator.instance.node;
                     return;
-                }
-                return;
 
             default:
                 //Poner los errores

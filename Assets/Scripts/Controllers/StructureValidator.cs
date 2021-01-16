@@ -38,6 +38,13 @@ public class StructureValidator : MonoBehaviour
             Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
 
         Debug.Log("Número de líneas: " + lineNumber);
+        if (errors != null)
+        {
+            ErrorController.instance.SetErrorMessage(errors);
+            ErrorController.instance.SetLineHasError(true);
+            UIController.instance.SetErrorText(lineNumber);
+            errors = null;
+        }
     }
 
     public void S()
