@@ -30,6 +30,7 @@ public class StructureValidator : MonoBehaviour
     public void StructureValidation()
     {
         isValid = true;
+        errors = null;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
         lineNumber = 0;
@@ -42,8 +43,7 @@ public class StructureValidator : MonoBehaviour
         {
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
-            UIController.instance.SetErrorText(lineNumber);
-            errors = null;
+            UIController.instance.SetErrorText(lineNumber, "ESTRUCTURALES");
         }
     }
 
@@ -73,10 +73,18 @@ public class StructureValidator : MonoBehaviour
             if (node.GetClassType() == "TipoDato" || node.GetClassType() == "Variable")
             {
                 TextReader.instance.varGram.NtA();
+                if (node != lastNode)
+                {
+                    S();
+                }
             }
             else if (node.GetClassType() == "KeyWord")
             {
                 TextReader.instance.cycGram.NtB();
+                if(node != lastNode)
+                {
+                    S();
+                }
             }
             else if(node != lastNode)
             {

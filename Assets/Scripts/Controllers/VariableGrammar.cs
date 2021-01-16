@@ -125,7 +125,7 @@ public class VariableGrammar
             case "KeyWord":
                 Debug.Log("Nombre de variable es palabra reservada");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Nombre de variable es palabra reservada \n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Nombre de variable es palabra reservada \n";
                 T();
                 ListaE();
                 return;
@@ -155,7 +155,7 @@ public class VariableGrammar
                     //SE AGREGÓ PARA MOSTRAR 
                     Debug.Log("Falló en ListaE de A, dos o más operadores seguidos");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Dos o más operadores seguidos \n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Dos o más operadores seguidos \n";
                     //
                 }
                 node = node.GetNextNode();
@@ -283,7 +283,7 @@ public class VariableGrammar
                 //poner los errores
                 Debug.Log("Falló en P, falta cerrar comillas, apóstrofe o paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Falta cerrar comillas, apóstrofe o paréntesis\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Falta cerrar comillas, apóstrofe o paréntesis\n";
                 return;
 
             case "Variable":
@@ -317,7 +317,7 @@ public class VariableGrammar
                 //Se ignora
                 Debug.Log("En P: nombre de variable es palabra reservada");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Nombre de variable es palabra reservada\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Nombre de variable es palabra reservada\n";
                 node = node.GetNextNode();
                 return;
                 //
@@ -342,7 +342,7 @@ public class VariableGrammar
                 {
                     Debug.Log("Falló en separador, falta inicializar variable, NO hay tipo de dato");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Falta tipo de dato en variable\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Falta tipo de dato en variable\n";
                 }
                 node = node.GetNextNode();
                 return;
@@ -357,14 +357,14 @@ public class VariableGrammar
 
                 Debug.Log("Falló en Separador, operador no válido después de variable");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Operador no válido después de variable\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Operador no válido después de variable\n";
 
                 return;
 
             case "FinSecuencia":
                 Debug.Log("Falló en Separador con:  no hay punto y coma");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Falta punto y coma\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Falta punto y coma\n";
                 return;
 
             default:
@@ -372,7 +372,7 @@ public class VariableGrammar
 
                 Debug.Log("Falló en Separador con: " + node.GetValue() + " dos o más variables seguidas");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Error en declaración de variable\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Error en declaración de variable\n";
                 break;
         }
     }
@@ -396,21 +396,20 @@ public class VariableGrammar
 
             case "FinSecuencia":
                 Debug.Log("Fin de secuencia en Fin");
-                StructureValidator.instance.lineNumber++;
-                Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
-
                 if (hasValue)
                 {
                     //ERROR 
                     Debug.Log("Falló en Fin, no hay punto y coma");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "- Falta punto y coma\n";
+                    + (StructureValidator.instance.lineNumber + 1).ToString() + "- Falta punto y coma\n";
                 }
-                    node = node.GetNextNode();
-                    StructureValidator.instance.node = node;
-                    StructureValidator.instance.S();
-                    node = StructureValidator.instance.node;
-                    return;
+                StructureValidator.instance.lineNumber++;
+                Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
+                node = node.GetNextNode();
+                StructureValidator.instance.node = node;
+                StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
+                return;
 
             default:
                 //Poner los errores

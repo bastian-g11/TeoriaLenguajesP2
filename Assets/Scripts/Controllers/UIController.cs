@@ -52,11 +52,12 @@ public class UIController : MonoBehaviour
         TextReader.instance.Recorrer(lineaTexto);
     }
 
-    public void SetErrorText(int lineNumber)
+    public void SetErrorText(int lineNumber, string errorType)
     {
         if (ErrorController.instance.GetLineHasError())
         {
-            errorText.text = errorText.text + "Errores en la línea: " + lineNumber + " \n" +
+            errorText.text = errorText.text +"\n"+"ERRORES " + errorType +" \n ";
+            errorText.text = errorText.text + "Total de líneas: " + lineNumber + " \n" +
                         ErrorController.instance.GetLineErrors();
             ErrorController.instance.RestartErrors();
         }

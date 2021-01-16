@@ -54,6 +54,12 @@ public class TextReader : MonoBehaviour
         bool lineHasError = ErrorController.instance.GetLineHasError();
 
         StructureValidator.instance.StructureValidation();
+        if(StructureValidator.instance.errors != null)
+        {
+            Destroy(UIController.instance.temporalContainer);
+            UIController.instance.distanceY = UIController.instance.distanceY - 5;
+            SinglyLinkedListController.instance.ResetSinglyLinkedList();
+        }
 
         if (lineHasError)
         {

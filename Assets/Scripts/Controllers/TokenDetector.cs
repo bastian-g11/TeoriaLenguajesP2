@@ -495,7 +495,7 @@ public class TokenDetector : MonoBehaviour
         {
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
-            UIController.instance.SetErrorText(lineNumber);
+            UIController.instance.SetErrorText(lineNumber, "SINTÁCTICOS");
             ErrorController.instance.SetLineHasError(false);
         }
         CreateNode("FinSecuencia", "¬");
