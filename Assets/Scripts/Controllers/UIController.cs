@@ -56,9 +56,8 @@ public class UIController : MonoBehaviour
     {
         if (ErrorController.instance.GetLineHasError())
         {
-            errorText.text = errorText.text +"\n"+"ERRORES " + errorType +" \n ";
-            errorText.text = errorText.text + "Total de líneas: " + lineNumber + " \n" +
-                        ErrorController.instance.GetLineErrors();
+            errorText.text = errorText.text +"\n"+"<b>ERRORES</b> " + "<b>"+errorType+"</b>" +" \n ";
+            errorText.text = errorText.text + ErrorController.instance.GetLineErrors();
             ErrorController.instance.RestartErrors();
         }
     }

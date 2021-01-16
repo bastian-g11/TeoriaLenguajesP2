@@ -287,6 +287,18 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 815084001924131801, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_Text
+      value: "\n\nAqu\xED aparecer\xE1 el c\xF3digo que contiene el archivo con extensi\xF3n
+        .java\n\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815084001924131801, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 976d126670e55c344b3bb09e05208e79,
+        type: 3}
     - target: {fileID: 815084001924131815, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -295,7 +307,12 @@ PrefabInstance:
     - target: {fileID: 815084001924131815, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 16.51944
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 815084001924131815, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1959115896099996719, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
@@ -312,6 +329,12 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959115896179636431, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: a067b6e7b7f4c31459e0abd17b5e5f0a,
+        type: 3}
     - target: {fileID: 1959115896223300636, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -321,6 +344,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959115896232676646, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 201.19986
       objectReference: {fileID: 0}
     - target: {fileID: 1959115896320503489, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
@@ -402,6 +430,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959115896804117682, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_Text
+      value: "\n\nAqu\xED aparecer\xE1n los mensajes de los errores que contiene
+        el c\xF3digo\n\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959115896804117682, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: a067b6e7b7f4c31459e0abd17b5e5f0a,
+        type: 3}
     - target: {fileID: 1959115896804117687, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -410,7 +450,12 @@ PrefabInstance:
     - target: {fileID: 1959115896804117687, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 9.999985
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959115896804117687, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1959115897013958522, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
@@ -462,6 +507,12 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959115897172931613, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: a067b6e7b7f4c31459e0abd17b5e5f0a,
+        type: 3}
     - target: {fileID: 1959115897347997040, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -472,6 +523,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959115897365672269, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: a067b6e7b7f4c31459e0abd17b5e5f0a,
+        type: 3}
+    - target: {fileID: 1959115897546814004, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: a067b6e7b7f4c31459e0abd17b5e5f0a,
+        type: 3}
     - target: {fileID: 1959115897574291562, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -611,6 +674,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959115897592868689, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 219.66681
       objectReference: {fileID: 0}
     - target: {fileID: 1959115897592868691, guid: 483f7b17c3fb58747bc75ca8c6e934ec,
         type: 3}
