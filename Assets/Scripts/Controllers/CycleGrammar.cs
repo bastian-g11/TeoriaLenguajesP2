@@ -25,7 +25,6 @@ public class CycleGrammar
             case "KeyWord":
                 PalabraReservada();
                 Delimitador();
-
                 StructureValidator.instance.node = node;
                 return;
 
@@ -328,6 +327,8 @@ public class CycleGrammar
                         //Avanzar hasta que no encuentre fin de secuencia
                         while (node != null && node.GetValue() == "¬" && node != lastNode)
                         {
+                            StructureValidator.instance.lineNumber++;
+                            Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                             node = node.GetNextNode();
                         }
                         return;
@@ -346,13 +347,22 @@ public class CycleGrammar
                     StructureValidator.instance.S();
                     node = StructureValidator.instance.node;
                     Debug.Log("Abre Llave en B Delimitador");
+                    Debug.Log(node.GetValue() == "}");
                     if (node != null && node.GetValue() == "}")
                     {
                         node = node.GetNextNode();
                         //Avanzar hasta que no encuentre fin de secuencia
                         while (node != null && node.GetValue() == "¬" && node != lastNode)
                         {
+                            StructureValidator.instance.lineNumber++;
+                            Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                             node = node.GetNextNode();
+                        }
+
+                        if(node != null && node.GetValue() == "¬" && node == lastNode)
+                        {
+                            StructureValidator.instance.lineNumber++;
+                            Debug.Log("<color=green>Sumé AL FINAL </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                         }
                         return;
                     }

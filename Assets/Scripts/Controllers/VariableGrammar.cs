@@ -388,6 +388,7 @@ public class VariableGrammar
         {
             case "Separador":
                 node = node.GetNextNode();
+                Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                 StructureValidator.instance.node = node;
                 StructureValidator.instance.S();
                 node = StructureValidator.instance.node;
@@ -395,14 +396,15 @@ public class VariableGrammar
 
             case "FinSecuencia":
                 Debug.Log("Fin de secuencia en Fin");
+                StructureValidator.instance.lineNumber++;
+                Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
+
                 if (hasValue)
                 {
                     //ERROR 
                     Debug.Log("Falló en Fin, no hay punto y coma");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "- Falta punto y coma\n";
-                    //StructureValidator.instance.errors =
-                    //    StructureValidator.instance.errors + "Falta punto y coma";
                 }
                     node = node.GetNextNode();
                     StructureValidator.instance.node = node;
@@ -416,6 +418,10 @@ public class VariableGrammar
                     Debug.Log("Falló en Fin con: " + node.GetValue());
                 else
                     Debug.Log("Falló en Fin");
+                node = node.GetNextNode();
+                StructureValidator.instance.node = node;
+                StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
                 break;
         }
     }

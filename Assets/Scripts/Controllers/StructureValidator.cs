@@ -58,6 +58,13 @@ public class StructureValidator : MonoBehaviour
         {
             node = node.GetNextNode();
             lineNumber++;
+            Debug.Log("<color=green>Sumé </color>" + " tengo: " + lineNumber);
+        }
+
+        if(node != null && node.GetValue() == "¬" && node == lastNode)
+        {
+            lineNumber++;
+            Debug.Log("<color=green>Sumé AL FINAL </color>" + " tengo: " + lineNumber);
         }
 
 
@@ -66,15 +73,6 @@ public class StructureValidator : MonoBehaviour
             if (node.GetClassType() == "TipoDato" || node.GetClassType() == "Variable")
             {
                 TextReader.instance.varGram.NtA();
-                //Debug.Log("Valor de errors: " + errors);
-                //if (errors != null)
-                //{
-                //    Debug.Log("Entr+o");
-                //    ErrorController.instance.SetErrorMessage(errors);
-                //    ErrorController.instance.SetLineHasError(true);
-                //    UIController.instance.SetErrorText(lineNumber);
-                //    errors = null;
-                //}
             }
             else if (node.GetClassType() == "KeyWord")
             {

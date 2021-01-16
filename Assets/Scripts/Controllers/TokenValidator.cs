@@ -24,7 +24,7 @@ public class TokenValidator : MonoBehaviour
         string classType = node.GetClassType();
         string value = node.GetValue();
         string errors = null;
-        Debug.Log("Se procesa: " + value + " y su Tipo es: " + classType);
+        //Debug.Log("Se procesa: " + value + " y su Tipo es: " + classType);
         switch(classType)
         {
             case "KeyWord":
