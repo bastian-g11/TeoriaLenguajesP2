@@ -6,14 +6,12 @@ public class CycleGrammar
 {
     public Node node;
     public Node lastNode;
-    public bool isValid = true;
 
 
     public void NtB()
     {
         node = StructureValidator.instance.node;
         lastNode = StructureValidator.instance.lastNode;
-        isValid = StructureValidator.instance.isValid;
 
 
         Debug.Log("Entró a B con: " + node.GetValue());
@@ -29,14 +27,11 @@ public class CycleGrammar
                 Delimitador();
 
                 StructureValidator.instance.node = node;
-                StructureValidator.instance.isValid = isValid;
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 StructureValidator.instance.node = node;
-                StructureValidator.instance.isValid = isValid;
 
                 Debug.Log("Falló en B con: " + node.GetValue());
                 break;
@@ -56,8 +51,8 @@ public class CycleGrammar
                 return;
 
             default:
+
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en B Variable con: " + node.GetValue());
                 break;
         }
@@ -82,8 +77,7 @@ public class CycleGrammar
 
                 }
 
-                isValid = false;
-                Debug.Log("Falló en B Variable con: " + node.GetValue());
+                Debug.Log("Falló en B Valor con: " + node.GetValue());
                 return;
 
             case "Numero":
@@ -101,12 +95,16 @@ public class CycleGrammar
                     node = node.GetNextNode();
                     return;
                 }
-                isValid = false;
+                return;
+
+            //SE AGREGÓ PARA RECONOCER ERRORES
+            case "KeyWord":
+                T();
+                ListaE();
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en B Variable con: " + node.GetValue());
                 break;
         }
@@ -120,8 +118,6 @@ public class CycleGrammar
         {
             node = node.GetNextNode();
         }
-        Debug.Log("Entró a ListaE de B 2 con: " + node.GetValue());
-
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -129,6 +125,15 @@ public class CycleGrammar
         switch (nodeType)
         {
             case "Boolean":
+                node = node.GetNextNode();
+                //Avanzar hasta que no encuentre fin de secuencia
+                while (node != null && node.GetValue() == "¬" && node != lastNode)
+                {
+                    node = node.GetNextNode();
+                }
+                T();
+                ListaE();
+                return;
             case "Operador":
                 node = node.GetNextNode();
                 //Avanzar hasta que no encuentre fin de secuencia
@@ -146,7 +151,6 @@ public class CycleGrammar
             case "Delimitador":
                 if (node != null && node.GetValue() == ")")
                     return;
-                isValid = false;
                 return;
 
             case "FinSecuencia":
@@ -156,7 +160,6 @@ public class CycleGrammar
             default:
 
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en ListaE de B con: " + node.GetValue());
                 break;
         }
@@ -176,10 +179,8 @@ public class CycleGrammar
                 {
                     P();
                     return;
-
                 }
 
-                isValid = false;
                 Debug.Log("Falló en Variable con: " + node.GetValue());
                 return;
 
@@ -199,13 +200,20 @@ public class CycleGrammar
                     P();
                     return;
                 }
-                isValid = false;
+                //ERROR
+                Debug.Log("Dos operadores juntos: Boolean después de otro operador");
+                return;
+
+            case "KeyWord":
+                //SE TOMA COMO TÉRMINO NORMAL
+                P();
+                ListaE();
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
-                Debug.Log("Falló en B Variable con: " + node.GetValue());
+                Debug.Log("Dos o más operadores seguidos");
+
                 break;
         }
 
@@ -261,7 +269,6 @@ public class CycleGrammar
 
                 //poner los errores
                 Debug.Log("Falló en P en B, falta cerrar comillas, apóstrofe o paréntesis");
-                isValid = false;
                 return;
 
             case "Variable":
@@ -278,12 +285,16 @@ public class CycleGrammar
                     node = node.GetNextNode();
                     return;
                 }
-                isValid = false;
+                return;
+
+            case "KeyWord":
+                //ERROR
+                Debug.Log("Nombre de variable contiene palabra reservada");
+                node = node.GetNextNode();
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en P con: " + node.GetValue());
                 break;
         }
@@ -316,7 +327,6 @@ public class CycleGrammar
                     }
                     //poner los errores
                     Debug.Log("Falló en Delimitador B, falta cerrar un Paréntesis");
-                    isValid = false;
                     return;
                 }
 
@@ -326,7 +336,7 @@ public class CycleGrammar
                     StructureValidator.instance.node = node;
                     StructureValidator.instance.S();
                     node = StructureValidator.instance.node;
-                    Debug.Log("Abre Llave en B Delimitador: "+ node.GetValue());
+                    Debug.Log("Abre Llave en B Delimitador");
                     if (node != null && node.GetValue() == "}")
                     {
                         node = node.GetNextNode();
@@ -339,19 +349,28 @@ public class CycleGrammar
                     }
                     //poner los errores
                     Debug.Log("Falló en Delimitador B, falta cerrar una LLave");
-                    isValid = false;
                     return;
                 }
 
                 //poner los errores
                 Debug.Log("Faltan llaves o Paréntesis");
-                isValid = false;
+                return;
+            case "FinSecuencia":
+                //ERROR
+                Debug.Log("Faltan llaves o Paréntesis");
+                return;
+
+            case "TipoDato":
+                //ERROR
+                Debug.Log("Faltan llaves o Paréntesis después de Palabra Reservada");
+                StructureValidator.instance.node = node;
+                StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
                 return;
 
             default:
 
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en P en B con: " + node.GetValue());
                 break;
 
@@ -381,12 +400,10 @@ public class CycleGrammar
                 }
 
                 //poner los errores
-                isValid = false;
                 return;
 
             default:
                 //Poner los errores
-                isValid = false;
                 Debug.Log("Falló en B Separador con: " + node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
                 break;
         }

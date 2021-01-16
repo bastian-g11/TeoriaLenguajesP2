@@ -375,6 +375,7 @@ public class VariableGrammar
                 Debug.Log("Fin de secuencia en Fin");
                 if (hasValue)
                 {
+                    //ERROR 
                     Debug.Log("Falló en Fin, no hay punto y coma");
                     //StructureValidator.instance.errors =
                     //    StructureValidator.instance.errors + "Falta punto y coma";

@@ -24,7 +24,7 @@ public class StructureValidator : MonoBehaviour
     public bool hasValue;
     public bool noVar = false;
     public bool hasDT = false;
-    public int lineNumber = 1;
+    public int lineNumber;
     public string errors = null;
 
     public void StructureValidation()
@@ -32,12 +32,12 @@ public class StructureValidator : MonoBehaviour
         isValid = true;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
-        lineNumber = 1;
+        lineNumber = 0;
         S();
         if (node != null)
             Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
 
-        //Debug.Log("Número de líneas: " + lineNumber);
+        Debug.Log("Número de líneas: " + lineNumber);
     }
 
     public void S()
@@ -45,12 +45,14 @@ public class StructureValidator : MonoBehaviour
         hasValue = false;
         hasDT = false;
         noVar = false;
-        Debug.Log("Volvió a S con: " + node.GetValue());
+        if(node!=null)
+            Debug.Log("Volvió a S con: " + node.GetValue());
         while (node != null && node.GetValue() == "¬" && node != lastNode)
         {
             node = node.GetNextNode();
             lineNumber++;
         }
+
 
         if (node != null)
         {
@@ -73,7 +75,7 @@ public class StructureValidator : MonoBehaviour
             }
             else if(node != lastNode)
             {
-                Debug.Log("La línea empieza de forma inválida");
+                Debug.Log("Aún no acaba");
             }
         }
     }
