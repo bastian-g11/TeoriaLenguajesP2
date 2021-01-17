@@ -252,10 +252,10 @@ public class TokenDetector : MonoBehaviour
                         }
                         else if (str[right] != (' '))
                         {
-                            //Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
                             if (isDelimiter(str[right]))
                             {
                                 tag = "Delimitador";
+
                                 if (str[right] == '\"' && !flagApostrofe)
                                     flagComilla = !flagComilla;
 
@@ -263,10 +263,32 @@ public class TokenDetector : MonoBehaviour
                                     flagApostrofe = !flagApostrofe;
 
                                 if ((str[right] == '\'' && flagComilla)
-                                    || str[right] == '\"' && flagApostrofe)
+                                    || (str[right] == '\"' && flagApostrofe))
                                 {
                                     tag = "Termino";
                                 }
+                                else if ((str[right] == '(' && flagComilla)
+                                    || (str[right] == '(' && flagApostrofe)
+                                    || (str[right] == ')' && flagComilla)
+                                    || (str[right] == ')' && flagApostrofe))
+                                {
+                                    tag = "Termino";
+                                }
+                                else if ((str[right] == '[' && flagComilla)
+                                    || (str[right] == '[' && flagApostrofe)
+                                    || (str[right] == ']' && flagComilla)
+                                    || (str[right] == ']' && flagApostrofe))
+                                {
+                                    tag = "Termino";
+                                }
+                                else if ((str[right] == '{' && flagComilla)
+                                    || (str[right] == '{' && flagApostrofe)
+                                    || (str[right] == '}' && flagComilla)
+                                    || (str[right] == '}' && flagApostrofe))
+                                {
+                                    tag = "Termino";
+                                }
+
                             }
                             else
                             {

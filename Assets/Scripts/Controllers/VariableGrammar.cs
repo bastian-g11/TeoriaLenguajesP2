@@ -98,7 +98,7 @@ public class VariableGrammar
 
     public void Valor()
     {
-        Debug.Log("Entró a valor con: " + node.GetValue());
+ 
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -165,6 +165,17 @@ public class VariableGrammar
                 return;
 
             case "Separador":
+                Debug.Log("<color=blue> ACÁ </color>");
+                if(node.GetValue() != ";")
+                {
+                    Debug.Log("Operador erróneo");
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Operador erróneo\n";
+                    node = node.GetNextNode();
+
+                    T();
+                    ListaE();
+                }
                 return;
 
             case "Delimitador":
@@ -244,6 +255,7 @@ public class VariableGrammar
                     if (node != null && node.GetValue() == ")")
                     {
                         node = node.GetNextNode();
+                        Debug.Log("Esto vale esa mierda: " + node.GetValue());
                         return;
                     }
                 }
@@ -284,6 +296,7 @@ public class VariableGrammar
                 Debug.Log("Falló en P, falta cerrar comillas, apóstrofe o paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar comillas, apóstrofe o paréntesis\n";
+                StructureValidator.instance.isBalanced = false;
                 return;
 
             case "Variable":
@@ -300,12 +313,17 @@ public class VariableGrammar
                     node = node.GetNextNode();
                     return;
                 }
+                //Operador ubicado de manera errónea
+                Debug.Log("En P: Operador ubicado de manera errónea");
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Operador booleano ubicado de manera errónea\n";
                 return;
 
             case "Operador":
             case "Separador":
                 //noVar implicar que <P> se reemplazó por lambda y entonces habrían 2 operadores seguidos
                 noVar = true;
+                Debug.Log("En P: Operador ubicado de manera errónea");
                 return;
 
             case "FinSecuencia":
@@ -342,7 +360,7 @@ public class VariableGrammar
                 {
                     Debug.Log("Falló en separador, falta inicializar variable, NO hay tipo de dato");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta tipo de dato en variable\n";
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta tipo de dato en variable o hay un operador ubicado de manera errónea\n";
                 }
                 node = node.GetNextNode();
                 return;
@@ -388,13 +406,10 @@ public class VariableGrammar
         {
             case "Separador":
                 node = node.GetNextNode();
-                if (node.GetValue()!="&")
-                {
-                    Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
-                    StructureValidator.instance.node = node;
-                    StructureValidator.instance.S();
-                    node = StructureValidator.instance.node;
-                }
+                Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
+                StructureValidator.instance.node = node;
+                StructureValidator.instance.S();
+                node = StructureValidator.instance.node;
                 return;
 
             case "FinSecuencia":
@@ -412,6 +427,13 @@ public class VariableGrammar
                 StructureValidator.instance.node = node;
                 StructureValidator.instance.S();
                 node = StructureValidator.instance.node;
+                return;
+
+
+            case "Delimitador":
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta abrir paréntesis\n";
+                StructureValidator.instance.isBalanced = false;
                 return;
 
             default:

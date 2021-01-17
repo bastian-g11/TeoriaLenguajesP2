@@ -21,6 +21,7 @@ public class UIController : MonoBehaviour
     public GameObject listContainer;
     public int distanceX = 4;
     public int distanceY = 0;
+    public Text balancedMessage;
 
 
     #region singleton
@@ -37,6 +38,11 @@ public class UIController : MonoBehaviour
         }
     }
     #endregion
+
+    public void SetBalancedMessage(bool b)
+    {
+            balancedMessage.gameObject.SetActive(b != true);
+    }
 
     public void SetText()
     {

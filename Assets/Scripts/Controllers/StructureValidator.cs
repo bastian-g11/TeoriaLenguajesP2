@@ -24,12 +24,14 @@ public class StructureValidator : MonoBehaviour
     public bool hasValue;
     public bool noVar = false;
     public bool hasDT = false;
+    public bool isBalanced = true;
     public int lineNumber;
     public string errors = null;
 
     public void StructureValidation()
     {
         isValid = true;
+        isBalanced = true;
         errors = null;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
@@ -44,7 +46,9 @@ public class StructureValidator : MonoBehaviour
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
             UIController.instance.SetErrorText(lineNumber, "ESTRUCTURALES");
+            UIController.instance.SetBalancedMessage(isBalanced);
         }
+        
     }
 
     public void S()

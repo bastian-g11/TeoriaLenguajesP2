@@ -41,7 +41,6 @@ public class TextReader : MonoBehaviour
         SinglyLinkedListController.instance.CreateSinglyLinkedList();
         lineNumber = 0;
         ErrorController.instance.SetLineHasError(false);
-
         while (true)
         {
             lineNumber += 1;
@@ -56,16 +55,16 @@ public class TextReader : MonoBehaviour
         StructureValidator.instance.StructureValidation();
         if(StructureValidator.instance.errors != null)
         {
-            Destroy(UIController.instance.temporalContainer);
-            UIController.instance.distanceY = UIController.instance.distanceY - 5;
-            SinglyLinkedListController.instance.ResetSinglyLinkedList();
+            //Destroy(UIController.instance.temporalContainer);
+            //UIController.instance.distanceY = UIController.instance.distanceY - 5;
+            //SinglyLinkedListController.instance.ResetSinglyLinkedList();
         }
 
         if (lineHasError)
         {
-            Destroy(UIController.instance.temporalContainer);
-            UIController.instance.distanceY = UIController.instance.distanceY - 5;
-            SinglyLinkedListController.instance.ResetSinglyLinkedList();
+            //Destroy(UIController.instance.temporalContainer);
+            //UIController.instance.distanceY = UIController.instance.distanceY - 5;
+            //SinglyLinkedListController.instance.ResetSinglyLinkedList();
         }
     }
 }

@@ -273,6 +273,7 @@ public class CycleGrammar
                 Debug.Log("Falló en P en B, falta cerrar comillas, apóstrofe o paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar comillas, apóstrofe o paréntesis\n";
+                StructureValidator.instance.isBalanced = false;
                 return;
 
             case "Variable":
@@ -337,6 +338,7 @@ public class CycleGrammar
                     Debug.Log("Falló en Delimitador B, falta cerrar un Paréntesis");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar un paréntesis\n";
+                    StructureValidator.instance.isBalanced = false;
                     return;
                 }
 
@@ -370,6 +372,7 @@ public class CycleGrammar
                     Debug.Log("Falló en Delimitador B, falta cerrar una LLave");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar una llave\n";
+                    StructureValidator.instance.isBalanced = false;
                     return;
                 }
 
