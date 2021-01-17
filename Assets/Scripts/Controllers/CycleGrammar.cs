@@ -353,6 +353,12 @@ public class CycleGrammar
                     return;
                 }
 
+                if (node != null && (node.GetValue() == "{" || node.GetValue() == "}" ||
+                    node.GetValue() == "[" || node.GetValue() == "]"))
+                {
+                    StructureValidator.instance.hasStrangeSymbol = true;
+                }
+
                 //poner los errores
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "- Faltan llaves o paréntesis\n";
