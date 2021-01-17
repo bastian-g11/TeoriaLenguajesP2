@@ -48,8 +48,6 @@ public class UIController : MonoBehaviour
     {
         lineaTexto = txt.text;
         lineaTexto.ToString();
-        Debug.Log(lineaTexto);
-        //AutomataController.instance.index = 0;
         errorText.text = " ";
         distanceY = 0;
         Destroy(temporalContainer);

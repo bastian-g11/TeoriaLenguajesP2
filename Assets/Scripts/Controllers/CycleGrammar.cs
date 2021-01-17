@@ -13,9 +13,6 @@ public class CycleGrammar
         node = StructureValidator.instance.node;
         lastNode = StructureValidator.instance.lastNode;
 
-
-        Debug.Log("Entró a B con: " + node.GetValue());
-
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -32,7 +29,6 @@ public class CycleGrammar
                 //Poner los errores
                 StructureValidator.instance.node = node;
 
-                Debug.Log("Falló en B con: " + node.GetValue());
                 break;
         }
     }
@@ -52,14 +48,12 @@ public class CycleGrammar
             default:
 
                 //Poner los errores
-                Debug.Log("Falló en B Variable con: " + node.GetValue());
                 break;
         }
     }
 
     public void Valor()
     {
-        Debug.Log("Entró a B valor con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -78,11 +72,9 @@ public class CycleGrammar
                 if(node != null && (node.GetValue() == "{" || node.GetValue() == "}" ||
                     node.GetValue() == "[" || node.GetValue() == "]"))
                 {
-                    Debug.Log("Falló en Delimitador en B con: " + node.GetValue());
                     StructureValidator.instance.hasStrangeSymbol = true;
                 }
 
-                Debug.Log("Falló en B Valor con: " + node.GetValue());
                 return;
 
             case "Numero":
@@ -110,14 +102,12 @@ public class CycleGrammar
 
             default:
                 //Poner los errores
-                Debug.Log("Falló en B Variable con: " + node.GetValue());
                 break;
         }
     }
 
     public void ListaE()
     {
-        Debug.Log("Entró a ListaE de B con: " + node.GetValue());
         //Avanzar hasta que no encuentre fin de secuencia
         while (node != null && node.GetValue() == "¬" && node != lastNode)
         {
@@ -159,13 +149,11 @@ public class CycleGrammar
                 return;
 
             case "FinSecuencia":
-                Debug.Log("Fin de secuencia B en ListaE");
                 return;
 
             default:
 
                 //Poner los errores
-                Debug.Log("Falló en ListaE de B con: " + node.GetValue());
                 break;
         }
     }
@@ -186,7 +174,6 @@ public class CycleGrammar
                     return;
                 }
 
-                Debug.Log("Falló en Variable con: " + node.GetValue());
                 return;
 
             case "Numero":
@@ -205,8 +192,6 @@ public class CycleGrammar
                     P();
                     return;
                 }
-                //ERROR
-                Debug.Log("Dos operadores juntos: Boolean después de otro operador");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Dos operadores juntos: Boolean después de otro operador\n";
                 return;
@@ -219,7 +204,6 @@ public class CycleGrammar
 
             default:
                 //Poner los errores
-                Debug.Log("Dos o más operadores seguidos");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Dos o más operadores seguidos\n";
                 break;
@@ -239,7 +223,6 @@ public class CycleGrammar
                 if (node != null && node.GetValue() == "(")
                 {
                     node = node.GetNextNode();
-                    Debug.Log("Abre paréntesis en B");
                     Valor();
                     if (node != null && node.GetValue() == ")")
                     {
@@ -276,7 +259,6 @@ public class CycleGrammar
                 }
 
                 //poner los errores
-                Debug.Log("Falló en P en B, falta cerrar comillas, apóstrofe o paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar comillas, apóstrofe o paréntesis\n";
                 StructureValidator.instance.isBalanced = false;
@@ -300,7 +282,6 @@ public class CycleGrammar
 
             case "KeyWord":
                 //ERROR
-                Debug.Log("Nombre de variable contiene palabra reservada");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Nombre de variable contiene palabra reservada\n";
                 node = node.GetNextNode();
@@ -308,14 +289,12 @@ public class CycleGrammar
 
             default:
                 //Poner los errores
-                Debug.Log("Falló en P con: " + node.GetValue());
                 break;
         }
     }
 
     public void Delimitador()
     {
-        Debug.Log("Entró a Delimitador con: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -326,7 +305,6 @@ public class CycleGrammar
                 if (node != null && node.GetValue() == "(")
                 {
                     node = node.GetNextNode();
-                    Debug.Log("Abre paréntesis en B Delimitador");
                     Valor();
                     if (node != null && node.GetValue() == ")")
                     {
@@ -335,13 +313,11 @@ public class CycleGrammar
                         while (node != null && node.GetValue() == "¬" && node != lastNode)
                         {
                             StructureValidator.instance.lineNumber++;
-                            Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                             node = node.GetNextNode();
                         }
                         return;
                     }
                     //poner los errores
-                    Debug.Log("Falló en Delimitador B, falta cerrar un Paréntesis");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar un paréntesis\n";
                     StructureValidator.instance.isBalanced = false;
@@ -354,8 +330,6 @@ public class CycleGrammar
                     StructureValidator.instance.node = node;
                     StructureValidator.instance.S();
                     node = StructureValidator.instance.node;
-                    Debug.Log("Abre Llave en B Delimitador");
-                    Debug.Log(node.GetValue() == "}");
                     if (node != null && node.GetValue() == "}")
                     {
                         node = node.GetNextNode();
@@ -363,19 +337,16 @@ public class CycleGrammar
                         while (node != null && node.GetValue() == "¬" && node != lastNode)
                         {
                             StructureValidator.instance.lineNumber++;
-                            Debug.Log("<color=green>Sumé x </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                             node = node.GetNextNode();
                         }
 
                         if (node != null && node.GetValue() == "¬" && node == lastNode)
                         {
                             StructureValidator.instance.lineNumber++;
-                            Debug.Log("<color=green>Sumé AL FINAL </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                         }
                         return;
                     }
                     //poner los errores
-                    Debug.Log("Falló en Delimitador B, falta cerrar una LLave");
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar una llave\n";
                     StructureValidator.instance.isBalanced = false;
@@ -383,21 +354,18 @@ public class CycleGrammar
                 }
 
                 //poner los errores
-                Debug.Log("Faltan llaves o Paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                     + "- Faltan llaves o paréntesis\n";
                 return;
 
             case "FinSecuencia":
                 //ERROR
-                Debug.Log("Faltan llaves o Paréntesis");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Faltan llaves o paréntesis\n";
                 return;
 
             case "TipoDato":
                 //ERROR
-                Debug.Log("Faltan llaves o Paréntesis después de Palabra Reservada");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Faltan llaves o Paréntesis después de Palabra Reservada\n";
                 StructureValidator.instance.node = node;
@@ -407,7 +375,6 @@ public class CycleGrammar
 
             case "Variable":
                 //ERROR
-                Debug.Log("Faltan llaves o Paréntesis después de Palabra Reservada");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Faltan llaves o Paréntesis después de Palabra Reservada\n";
                 StructureValidator.instance.node = node;
@@ -417,7 +384,6 @@ public class CycleGrammar
 
             default:
                 //Poner los errores
-                Debug.Log("Falló en Delimitador en B con: " + node.GetValue());
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar paréntesis\n" + "Fin de lectura";
                 StructureValidator.instance.isBalanced = false;
@@ -448,7 +414,6 @@ public class CycleGrammar
                     while (node != null && node.GetValue() == "¬" && node != lastNode)
                     {
                         StructureValidator.instance.lineNumber++;
-                        Debug.Log("<color=green>Sumé x </color>" + " tengo: " + StructureValidator.instance.lineNumber);
                         node = node.GetNextNode();
                     }
                     return;
@@ -459,7 +424,6 @@ public class CycleGrammar
 
             default:
                 //Poner los errores
-                Debug.Log("Falló en B Separador con: " + node.GetValue() + " no hay punto y coma ni igual ó dos o más variables seguidas");
                 StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: No hay punto y coma ni igual ó dos o más variables seguidas\n";
                 break;

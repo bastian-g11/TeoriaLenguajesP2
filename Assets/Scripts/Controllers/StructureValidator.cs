@@ -39,10 +39,7 @@ public class StructureValidator : MonoBehaviour
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
         lineNumber = 0;
         S();
-        if (node != null)
-            Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
 
-        Debug.Log("Número de líneas: " + lineNumber);
         if (errors != null && !hasStrangeSymbol)
         {
             ErrorController.instance.SetErrorMessage(errors);
@@ -67,15 +64,13 @@ public class StructureValidator : MonoBehaviour
         hasValue = false;
         hasDT = false;
         noVar = false;
-        if(node!=null)
-            Debug.Log("Volvió a S con: " + node.GetValue());
+        
 
 
         while (node != null && node.GetValue() == "¬" && node != lastNode)
         {
             node = node.GetNextNode();
             lineNumber++;
-            Debug.Log("<color=green>Sumé en S</color>" + " tengo: " + lineNumber);
         }
 
 
@@ -83,7 +78,6 @@ public class StructureValidator : MonoBehaviour
         if(node != null && node.GetValue() == "¬" && node == lastNode)
         {
             lineNumber++;
-            Debug.Log("<color=green>Sumé AL FINAL </color>" + " tengo: " + lineNumber);
         }
 
 

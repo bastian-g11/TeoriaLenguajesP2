@@ -94,7 +94,6 @@ public class TokenDetector : MonoBehaviour
     {
         if (str.Equals("if") || str.Equals("else") || str.Equals("while"))
         {
-            //Debug.Log("Es palabra clave");
             return (true);
         }
         return (false);
@@ -105,7 +104,6 @@ public class TokenDetector : MonoBehaviour
         if (str.Equals("boolean") || str.Equals("String") ||
             str.Equals("int") || str.Equals("float"))
         {
-            //Debug.Log("Es tipo de dato");
             return (true);
         }
         return (false);
@@ -116,7 +114,6 @@ public class TokenDetector : MonoBehaviour
     {
         int i, len = str.Length;
         bool hasE = false;
-        //Debug.Log("<color=blue> Linea a procesar: </color>" + str);
         if (len == 0)
             return (false);
         for (i = 0; i < len; i++)
@@ -241,7 +238,6 @@ public class TokenDetector : MonoBehaviour
 
                         if (isOperator(str[right]) == true)
                         {
-                            //Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                             tag = "Operador";
                             if (flagComilla || flagApostrofe)
                             {
@@ -316,46 +312,39 @@ public class TokenDetector : MonoBehaviour
 
                         if (isKeyword(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A KEYWORD\n" + subStr);
                         tag = "KeyWord";
                     }
 
                     else if (!flagDT && isDataType(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A KEYWORD\n" + subStr);
                         tag = "TipoDato";
                         flagDT = true;
                     }
 
                     else if (isInteger(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS AN INTEGER\n" + subStr);
                         tag = "Numero";
                     }
 
                     else if (isRealNumber(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
                         tag = "Numero";
                     }
 
                     else if (isBoolean(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
                     }
 
                     else if (ValidIdentifier(subStr) == true
                             && isSeparator(str[right - 1]) == false)
                     {
-                        //Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
                             && isSeparator(str[right - 1]) == false)
                     {
-                        //Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
@@ -377,7 +366,6 @@ public class TokenDetector : MonoBehaviour
                 if (right > 0 && right < len && char.ToLower(str[right - 1]) == 'e'
                     && (str[right] == '-' || str[right] == '+'))
                 {
-                    //Debug.Log("<color=green> Es científico </color>");
                     right++;
                 }
 
@@ -407,7 +395,6 @@ public class TokenDetector : MonoBehaviour
 
                         if (isOperator(str[right]) == true)
                         {
-                            //Debug.Log("'%c' IS AN OPERATOR: \n" + str[right]);
                             tag = "Operador";
                             if (flagComilla || flagApostrofe)
                             {
@@ -418,7 +405,6 @@ public class TokenDetector : MonoBehaviour
                         }
                         else if (str[right] != (' '))
                         {
-                            //Debug.Log("'%c' IS A DELIMITER: \n" + str[right]);
                             if (isDelimiter(str[right]))
                             {
                                 tag = "Delimitador";
@@ -459,46 +445,39 @@ public class TokenDetector : MonoBehaviour
 
                     if (isKeyword(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A KEYWORD\n" + subStr);
                         tag = "KeyWord";
                     }
 
                     else if (!flagDT && isDataType(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A KEYWORD\n" + subStr);
                         tag = "TipoDato";
                         flagDT = true;
                     }
 
                     else if (isInteger(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS AN INTEGER\n" + subStr);
                         tag = "Numero";
                     }
 
                     else if (isRealNumber(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A REAL NUMBER\n" + subStr);
                         tag = "Numero";
                     }
 
                     else if (isBoolean(subStr) == true)
                     {
-                        //Debug.Log("'%s' IS A BOOLEAN OPERATOR\n" + subStr);
                         tag = "Boolean";
                     }
 
                     else if (ValidIdentifier(subStr) == true
                             && isSeparator(str[right - 1]) == false)
                     {
-                        //Debug.Log("'%s' IS A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
                     else if (ValidIdentifier(subStr) == false
                             && isSeparator(str[right - 1]) == false)
                     {
-                        //Debug.Log("'%s' IS NOT A VALID IDENTIFIER\n" + subStr);
                         tag = "Variable";
                     }
 
