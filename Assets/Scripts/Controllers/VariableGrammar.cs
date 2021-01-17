@@ -164,6 +164,8 @@ public class VariableGrammar
             case "Delimitador":
                 if (node != null && node.GetValue() == ")")
                     return;
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Error en Delimitador, falta operador antes de delimitador\n";
                 return;
 
             case "FinSecuencia":
@@ -406,6 +408,20 @@ public class VariableGrammar
                     StructureValidator.instance.errors = StructureValidator.instance.errors
                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta abrir paréntesis\n";
                     StructureValidator.instance.isBalanced = false;
+                    while (node != null && node.GetValue() != "¬")
+                    {
+                        node = node.GetNextNode();
+                    }
+                    StructureValidator.instance.lineNumber++;
+                    node = node.GetNextNode();
+                    StructureValidator.instance.node = node;
+                    StructureValidator.instance.S();
+                    node = StructureValidator.instance.node;
+                }
+                
+                else if (node.GetValue() == "\"" || node.GetValue() == "(" || node.GetValue() == "\'"
+                    || node.GetValue() == "{" || node.GetValue() == "}" || node.GetValue() == "[" || node.GetValue() == "]")
+                {
                     while (node != null && node.GetValue() != "¬")
                     {
                         node = node.GetNextNode();
