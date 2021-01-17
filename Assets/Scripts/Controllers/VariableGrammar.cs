@@ -84,6 +84,8 @@ public class VariableGrammar
                 return;
 
             default:
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta variable\n";
                 break;
         }
     }
@@ -309,7 +311,7 @@ public class VariableGrammar
                     return;
                 }
                 StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Operador booleano ubicado de manera errónea\n";
+                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Operador ubicado de manera errónea\n";
                 return;
 
             case "Operador":
