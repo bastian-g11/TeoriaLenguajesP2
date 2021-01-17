@@ -58,6 +58,7 @@ public class TextReader : MonoBehaviour
             Destroy(UIController.instance.temporalContainer);
             UIController.instance.distanceY = UIController.instance.distanceY - 5;
             SinglyLinkedListController.instance.ResetSinglyLinkedList();
+            UIController.instance.errorText.alignment = TextAnchor.UpperLeft;
         }
 
         if (lineHasError)
@@ -65,6 +66,13 @@ public class TextReader : MonoBehaviour
             Destroy(UIController.instance.temporalContainer);
             UIController.instance.distanceY = UIController.instance.distanceY - 5;
             SinglyLinkedListController.instance.ResetSinglyLinkedList();
+            UIController.instance.errorText.alignment = TextAnchor.UpperLeft;
+        }
+
+        if (StructureValidator.instance.errors == null && !lineHasError)
+        {
+            UIController.instance.errorText.text = "<b>No hay errores en el código procesado</b>";
+            UIController.instance.errorText.alignment = TextAnchor.MiddleCenter;
         }
     }
 }
