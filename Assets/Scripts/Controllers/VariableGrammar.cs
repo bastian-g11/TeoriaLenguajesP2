@@ -140,7 +140,7 @@ public class VariableGrammar
 
     public void ListaE()
     {
-        Debug.Log("Entró a ListaE de A con: " + node.GetValue());
+        //Debug.Log("Entró a ListaE de A con: " + node.GetValue());
 
         string nodeType = null;
         if (node != null)
@@ -195,7 +195,7 @@ public class VariableGrammar
             default:
 
                 //Poner los errores
-                Debug.Log("Falló en ListaE con: " + node.GetValue());
+                //Debug.Log("Falló en ListaE con: " + node.GetValue());
                 break;
         }
     }
@@ -290,6 +290,25 @@ public class VariableGrammar
 
                         return;
                     }
+                }
+
+                if(node != null && (node.GetValue() == "{" ||
+                    node.GetValue() == "}" || node.GetValue() == "[" ||
+                    node.GetValue() == "]" ))
+                {
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Delimitador no válido\n";
+                    while (node != null && node.GetValue() != "¬")
+                    {
+                        node = node.GetNextNode();
+                    }
+                    StructureValidator.instance.lineNumber++;
+                    Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
+                    node = node.GetNextNode();
+                    StructureValidator.instance.node = node;
+                    StructureValidator.instance.S();
+                    node = StructureValidator.instance.node;
+                    return;
                 }
 
                 //poner los errores
@@ -397,7 +416,7 @@ public class VariableGrammar
 
     public void Fin()
     {
-        Debug.Log("ENTRÓ A FIN CON: " + node.GetValue());
+        //Debug.Log("ENTRÓ A FIN CON: " + node.GetValue());
         string nodeType = null;
         if (node != null)
             nodeType = node.GetClassType();
@@ -431,9 +450,22 @@ public class VariableGrammar
 
 
             case "Delimitador":
-                StructureValidator.instance.errors = StructureValidator.instance.errors
-                    + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta abrir paréntesis\n";
-                StructureValidator.instance.isBalanced = false;
+                if(node.GetValue() == ")")
+                {
+                    StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta abrir paréntesis\n";
+                    StructureValidator.instance.isBalanced = false;
+                    while (node != null && node.GetValue() != "¬")
+                    {
+                        node = node.GetNextNode();
+                    }
+                    StructureValidator.instance.lineNumber++;
+                    Debug.Log("<color=green>Sumé </color>" + " tengo: " + StructureValidator.instance.lineNumber);
+                    node = node.GetNextNode();
+                    StructureValidator.instance.node = node;
+                    StructureValidator.instance.S();
+                    node = StructureValidator.instance.node;
+                }
                 return;
 
             default:
@@ -442,7 +474,8 @@ public class VariableGrammar
                     Debug.Log("Falló en Fin con: " + node.GetValue());
                 else
                     Debug.Log("Falló en Fin");
-                node = node.GetNextNode();
+                if(node!=null)
+                    node = node.GetNextNode();
                 StructureValidator.instance.node = node;
                 StructureValidator.instance.S();
                 node = StructureValidator.instance.node;

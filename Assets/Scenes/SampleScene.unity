@@ -1490,6 +1490,7 @@ MonoBehaviour:
   noVar: 0
   hasDT: 0
   isBalanced: 1
+  hasStrangeSymbol: 0
   lineNumber: 1
   errors: 
 --- !u!114 &1468149519

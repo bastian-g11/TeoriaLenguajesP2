@@ -75,6 +75,12 @@ public class CycleGrammar
                     return;
 
                 }
+                if(node != null && (node.GetValue() == "{" || node.GetValue() == "}" ||
+                    node.GetValue() == "[" || node.GetValue() == "]"))
+                {
+                    Debug.Log("Falló en Delimitador en B con: " + node.GetValue());
+                    StructureValidator.instance.hasStrangeSymbol = true;
+                }
 
                 Debug.Log("Falló en B Valor con: " + node.GetValue());
                 return;
@@ -361,7 +367,7 @@ public class CycleGrammar
                             node = node.GetNextNode();
                         }
 
-                        if(node != null && node.GetValue() == "¬" && node == lastNode)
+                        if (node != null && node.GetValue() == "¬" && node == lastNode)
                         {
                             StructureValidator.instance.lineNumber++;
                             Debug.Log("<color=green>Sumé AL FINAL </color>" + " tengo: " + StructureValidator.instance.lineNumber);
@@ -410,9 +416,11 @@ public class CycleGrammar
                 return;
 
             default:
-
                 //Poner los errores
-                Debug.Log("Falló en P en B con: " + node.GetValue());
+                Debug.Log("Falló en Delimitador en B con: " + node.GetValue());
+                StructureValidator.instance.errors = StructureValidator.instance.errors
+                   + "<b>Línea " + (StructureValidator.instance.lineNumber + 1).ToString() + "</b>: Falta cerrar paréntesis\n" + "Fin de lectura";
+                StructureValidator.instance.isBalanced = false;
                 break;
 
         }

@@ -25,6 +25,7 @@ public class StructureValidator : MonoBehaviour
     public bool noVar = false;
     public bool hasDT = false;
     public bool isBalanced = true;
+    public bool hasStrangeSymbol = false;
     public int lineNumber;
     public string errors = null;
 
@@ -32,6 +33,7 @@ public class StructureValidator : MonoBehaviour
     {
         isValid = true;
         isBalanced = true;
+        hasStrangeSymbol = false;
         errors = null;
         node = SinglyLinkedListController.instance.singlyLinkedList.GetFirstNode();
         lastNode = SinglyLinkedListController.instance.singlyLinkedList.GetLastNode();
@@ -41,12 +43,21 @@ public class StructureValidator : MonoBehaviour
             Debug.Log("SIRVIÓOOOOOO: " + node.GetValue());
 
         Debug.Log("Número de líneas: " + lineNumber);
-        if (errors != null)
+        if (errors != null && !hasStrangeSymbol)
         {
             ErrorController.instance.SetErrorMessage(errors);
             ErrorController.instance.SetLineHasError(true);
             UIController.instance.SetErrorText(lineNumber, "ESTRUCTURALES");
             UIController.instance.SetBalancedMessage(isBalanced);
+        }
+        if(hasStrangeSymbol)
+        {
+            errors = null;
+            errors = StructureValidator.instance.errors 
+                 + " Delimitador inválido\n" + " Fin de lectura";
+            ErrorController.instance.SetErrorMessage(errors);
+            ErrorController.instance.SetLineHasError(true);
+            UIController.instance.SetErrorText(lineNumber, "ESTRUCTURALES");
         }
         
     }
@@ -58,12 +69,16 @@ public class StructureValidator : MonoBehaviour
         noVar = false;
         if(node!=null)
             Debug.Log("Volvió a S con: " + node.GetValue());
+
+
         while (node != null && node.GetValue() == "¬" && node != lastNode)
         {
             node = node.GetNextNode();
             lineNumber++;
-            Debug.Log("<color=green>Sumé </color>" + " tengo: " + lineNumber);
+            Debug.Log("<color=green>Sumé en S</color>" + " tengo: " + lineNumber);
         }
+
+
 
         if(node != null && node.GetValue() == "¬" && node == lastNode)
         {
